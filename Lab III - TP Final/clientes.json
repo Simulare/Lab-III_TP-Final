@@ -1,0 +1,11 @@
+[ {
+  "nombre" : "Juan",
+  "apellido" : "Perez",
+  "dni" : 33666111,
+  "edad" : 34
+}, {
+  "nombre" : "Juana",
+  "apellido" : "Perez",
+  "dni" : 44555222,
+  "edad" : 31
+} ]
