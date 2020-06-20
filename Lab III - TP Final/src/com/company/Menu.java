@@ -71,7 +71,7 @@ public class Menu extends Empresa{
                 case 0:
                     break;
                 case 1:
-                    ///Menu para listar vuelos.
+                    ///Menu para listar vuelos
                     break;
                 case 2:
                     listadosClientes();

@@ -10,5 +10,8 @@
     <orderEntry type="library" exported="" name="jackson-annotations-2.11.0" level="project" />
     <orderEntry type="library" exported="" name="jackson-core-2.11.0" level="project" />
     <orderEntry type="library" exported="" name="jackson-databind-2.11.0" level="project" />
+    <orderEntry type="library" name="jackson-annotations-2.7.3" level="project" />
+    <orderEntry type="library" name="jackson-core-2.7.3" level="project" />
+    <orderEntry type="library" name="jackson-databind-2.7.3" level="project" />
   </component>
 </module>
