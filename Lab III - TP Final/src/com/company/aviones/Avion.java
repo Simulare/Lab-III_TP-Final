@@ -7,16 +7,26 @@ public abstract class Avion {
     protected int capacidad;
     protected double maxVelocidad;
     protected Motor propulsion;
+    protected TipoAvion tipoAvion;
 
     public Avion(){}
 
-    public Avion(int id, double ltsComustible, double costoKm, int capacidad, double maxVelocidad, Motor propulsion) {
+    public Avion(int id, double ltsComustible, double costoKm, int capacidad, double maxVelocidad, Motor propulsion, TipoAvion tipoAvion) {
         this.id = id;
         this.ltsComustible = ltsComustible;
         this.costoKm = costoKm;
         this.capacidad = capacidad;
         this.maxVelocidad = maxVelocidad;
         this.propulsion = propulsion;
+        this.tipoAvion = tipoAvion;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public double getLtsComustible() {
@@ -57,5 +67,13 @@ public abstract class Avion {
 
     public void setPropulsion(Motor propulsion) {
         this.propulsion = propulsion;
+    }
+
+    public TipoAvion getTipoAvion() {
+        return tipoAvion;
+    }
+
+    public void setTipoAvion(TipoAvion tipoAvion) {
+        this.tipoAvion = tipoAvion;
     }
 }
