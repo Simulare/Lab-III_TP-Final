@@ -55,25 +55,55 @@ public class Vuelo {
             System.out.println("ERROR: Cliente no encontrado :(\n");
         }else{
             System.out.println("Hola, "+cliente.getNombre());
+            /// Verificar que para esa fecha hay aviones de ese tipo disponibles
+
+
+
+            /// Verificar que la fecha sea mayor que "hoy"
+
+
+
+            /// Verificar que el origen y el destino no sea el mismo
+
+            if(parametros[2].equals(parametros[3])){
+                System.out.println("Me estas cargando "+cliente.getNombre()+"? Para que vas a pagar un vuelo para subir y bajar? Tanta plata tenes?");
+            }
+
+            /// Verificar que la cantidad de pasajeros no supere el max
+
         }
 
-        /// Verificar que para esa fecha hay aviones de ese tipo disponibles
 
+    }
 
+    public double calcularDistancia (Ciudad origen, Ciudad destino){
+        double distancia = 0;
 
-        /// Verificar que la fecha sea mayor que "hoy"
+        if (origen == Ciudad.BUENOS_AIRES || destino == Ciudad.BUENOS_AIRES){
+            if (origen == Ciudad.CORDOBA || destino == Ciudad.CORDOBA){
+                distancia = 695; // Ruta Bs.as - Cordoba
 
+            }else if (origen == Ciudad.SANTIAGO_DE_CHILE || destino == Ciudad.SANTIAGO_DE_CHILE){
+                distancia = 1400; // Ruta Bs.As - Santiago
 
+            }else if(origen == Ciudad.MONTEVIDEO || destino == Ciudad.MONTEVIDEO){
+                distancia = 950; // Ruta Bs.As. - Montevideo
+            }
 
-        /// Verificar que el origen y el destino no sea el mismo
+        }else if(origen == Ciudad.CORDOBA || destino == Ciudad.CORDOBA){
+            if (origen == Ciudad.MONTEVIDEO || destino == Ciudad.MONTEVIDEO){
+                distancia = 1190; // Ruta Cordoba - Montevideo
 
-        if(parametros[2].equals(parametros[3])){
-            System.out.println("Me estas cargando "+cliente.getNombre()+"? Para que vas a pagar un vuelo para subir y bajar? Tanta plata tenes?");
+            }else if (origen == Ciudad.SANTIAGO_DE_CHILE || destino == Ciudad.SANTIAGO_DE_CHILE) {
+                distancia = 1050; // Ruta Cordoba - Santiago
+            }
+
+        }else if (origen == Ciudad.MONTEVIDEO || destino == Ciudad.MONTEVIDEO){
+            if (origen == Ciudad.SANTIAGO_DE_CHILE || destino == Ciudad.SANTIAGO_DE_CHILE){
+                distancia = 2100; // Ruta Montevideo - Santiago
+            }
         }
-
-        /// Verificar que la cantidad de pasajeros no supere el max
-
-
+        return distancia;
     }
 
 

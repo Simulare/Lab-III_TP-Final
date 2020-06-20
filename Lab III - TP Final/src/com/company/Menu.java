@@ -195,7 +195,7 @@ public class Menu extends Empresa{
         System.out.println(" -------------------------------------------------------\n");
         System.out.println("Su DNI " + dni + " no está registrado. Para registrar complete sus datos:\n");
         Cliente nuevoCliente = new Cliente();
-        nuevoCliente.crearNuevo(dni);
+        agregarCliente(nuevoCliente);
         clientes.add(nuevoCliente);
         System.out.println("            +++ Registrado con éxito! +++");
         return nuevoCliente;

@@ -31,6 +31,10 @@ public abstract class Empresa {
         return null;
     }
 
+    public void agregarCliente (Cliente cliente){
+        clientes.add(cliente);
+    }
+
     public void eliminarCliente(Cliente cliente){
         clientes.remove(cliente);
     }

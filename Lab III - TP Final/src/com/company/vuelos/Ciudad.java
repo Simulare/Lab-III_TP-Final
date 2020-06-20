@@ -4,6 +4,6 @@ public enum Ciudad {
 
     BUENOS_AIRES,
     CORDOBA,
-    ANTIAGO_DE_CHILE,
+    SANTIAGO_DE_CHILE,
     MONTEVIDEO
 }
