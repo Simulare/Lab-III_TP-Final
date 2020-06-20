@@ -25,44 +25,86 @@ public class Menu extends Empresa{
     }
 
     public void iniciarMenu(){
-        int respuesta;
-        int dni;
+        menuPrincipal();
+    }
 
+    public void menuPrincipal (){
+        int respuesta = 0;
         do {
-            do {
-                do {
-                    System.out.println(" -------------------------------------------------------");
-                    System.out.println("Bienvenido! Ingrese su DNI para identificarse:");
-                    dni = checkInt(scanner.nextLine());
-                    if (dni == -1){
-                        System.out.println("DNI no válido.");
+            System.out.println(" -------------------------------------------------------");
+            System.out.println("            SISTEMA DE PASAJES \"AEROTAXI\"");
+            System.out.println(" -------------------------------------------------------");
+            System.out.println("              <<<<< MENU PRINCIPAL >>>>>\n");
+            System.out.println("0. Salir del sistema.\n" +
+                    "1. Comprar vuelos.\n" +
+                    "2. Menu de listados.\n\n" +
+                    "Elija una opción: ");
+
+            respuesta = checkInt(scanner.nextLine());
+            switch (respuesta){
+                case 0:
+                    break;
+                case 1:
+                    int dni = menuIdentificarCliente();
+                    if (dni != -1){
+
+                        Cliente clienteActual = buscarCliente(dni);
+                        if (clienteActual == null){
+                            clienteActual = registrarCliente(dni);
+                        }
+                        // Funciones para comprar los vuelos
                     }
-                } while (dni == -1);
-                System.out.println(" -------------------------------------------------------");
-                System.out.println("Confirma que su DNI es " + dni + "? (Presione '1' para confirmar):");;
-                respuesta = checkInt(scanner.nextLine());
 
-                if (respuesta != 1){
-                    System.out.println("No confirmó su DNI, intente de nuevo.");
-                }
-
-            }while (respuesta != 1);
-
-            Cliente clienteActual = buscarCliente(dni);
-
-            if (clienteActual == null){
-                clienteActual = registrarCliente(dni);
+                    break;
+                case 2:
+                    menuListados();
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+                    break;
             }
 
         }while (respuesta != 0);
+
     }
+
+    public int menuIdentificarCliente(){
+        int respuesta = 0;
+        int dni;
+
+            do {
+                System.out.println(" -------------------------------------------------------");
+                System.out.println("         <<<<< IDENTIFICACIÓN DEL USUARIO >>>>>");
+                System.out.println(" -------------------------------------------------------\n");
+                System.out.println("Ingrese el DNI del cliente:");
+                dni = checkInt(scanner.nextLine());
+                if (dni == -1){
+                    System.out.println("              +++ DNI no válido +++");
+                }
+            } while (dni == -1);
+            System.out.println(" -------------------------------------------------------");
+            System.out.println("         <<<<< IDENTIFICACIÓN DEL USUARIO >>>>>");
+            System.out.println(" -------------------------------------------------------\n");
+            System.out.println("Confirma que se ha ingresado correctamente el DNI Nº " + dni + "? (Presione '1' para confirmar, o cualquier tecla para volver):");;
+            respuesta = checkInt(scanner.nextLine());
+
+            if (respuesta != 1){
+                System.out.println("No confirmó el DNI. Volverá al menú principal.");
+                dni = -1;
+            }
+
+        return dni;
+    }
+
 
     public void menuListados(){
         int respuesta = 0;
         do{
             System.out.println(" -------------------------------------------------------");
-            System.out.println("<<<<< MENU LISTADOS >>>>> (0 para volver)\n");
-            System.out.println("1. Listado de vuelos.\n" +
+            System.out.println("               <<<<< MENU LISTADOS >>>>>");
+            System.out.println(" -------------------------------------------------------\n");
+            System.out.println("0. Volver.\n" +
+                    "1. Listado de vuelos.\n" +
                     "2. Listados de clientes.\n\n" +
                     "Elija una opción: ");
             respuesta = checkInt(scanner.nextLine());
@@ -77,7 +119,7 @@ public class Menu extends Empresa{
                     listadosClientes();
                     break;
                 default:
-                    System.out.println("Opción inválida.");
+                    System.out.println("              +++ Opción inválida. +++");
                     break;
             }
 
@@ -89,8 +131,10 @@ public class Menu extends Empresa{
         do {
 
             System.out.println(" -------------------------------------------------------");
-            System.out.println("<<<<< MENU LISTADOS DE CLIENTES >>>>> (0 para volver)\n");
-            System.out.println("1. Clientes y datos personales.\n" +
+            System.out.println("          <<<<< MENU LISTADOS DE CLIENTES >>>>>");
+            System.out.println(" -------------------------------------------------------\n");
+            System.out.println("0. Volver.\n" +
+                    "1. Clientes y datos personales.\n" +
                     "2. Clientes y su mejor categoría de avión utilizada.\n" +
                     "3. Clientes y su gasto total.\n\n" +
                     "Elija una opción:");
@@ -99,26 +143,43 @@ public class Menu extends Empresa{
             switch (respuesta){
                 case 0:
                     break;
+
                 case 1:
                     System.out.println(" -------------------------------------------------------");
-                    System.out.println("<<<<< CLIENTES Y DATOS PERSONALES >>>>>\n");
+                    System.out.println("        <<<<< CLIENTES Y DATOS PERSONALES >>>>>");
+                    System.out.println(" -------------------------------------------------------\n");
                     listarClientes();
                     System.out.println("\n... Presione ENTER para continuar ...");
                     pausarConsola();
                     scanner.nextLine();
                     break;
+
                 case 2:
                     System.out.println(" -------------------------------------------------------");
-                    System.out.println("<<<<< CLIENTES Y SU MEJOR CATEGORIA DE AVIÓN >>>>>\n");
+                    System.out.println("  <<<<< CLIENTES Y SU MEJOR CATEGORIA DE AVIÓN >>>>>");
+                    System.out.println(" -------------------------------------------------------\n");
+
                     ///Listado de mejor categoría
+
+                    System.out.println("\n... Presione ENTER para continuar ...");
+                    pausarConsola();
+                    scanner.nextLine();
                     break;
+
                 case 3:
                     System.out.println(" -------------------------------------------------------");
-                    System.out.println("<<<<< CLIENTES Y SU GASTO TOTAL >>>>>\n");
+                    System.out.println("         <<<<< CLIENTES Y SU GASTO TOTAL >>>>>");
+                    System.out.println(" -------------------------------------------------------\n");
+
                     ///Listado de GASTO TOTAL
+
+                    System.out.println("\n... Presione ENTER para continuar ...");
+                    pausarConsola();
+                    scanner.nextLine();
                     break;
+
                 default:
-                    System.out.println("Opción inválida.");
+                    System.out.println("              +++ Opción inválida. +++");
                     break;
             }
         }while (respuesta != 0);
@@ -126,11 +187,14 @@ public class Menu extends Empresa{
 
     public Cliente registrarCliente(int dni){
 
-        System.out.println("Su DNI " + dni + " no está registrado. Para registrar complete sus datos: ");
+        System.out.println(" -------------------------------------------------------");
+        System.out.println("            <<<<< REGISTRAR CLIENTE >>>>>");
+        System.out.println(" -------------------------------------------------------\n");
+        System.out.println("Su DNI " + dni + " no está registrado. Para registrar complete sus datos:\n");
         Cliente nuevoCliente = new Cliente();
         nuevoCliente.crearNuevo(dni);
-        //clientes.add(nuevoCliente);       Comentado para no guardar las pruebas en el archivos
-        System.out.println("Registrado con éxito!");
+        clientes.add(nuevoCliente);
+        System.out.println("            +++ Registrado con éxito! +++");
         return nuevoCliente;
     }
 
