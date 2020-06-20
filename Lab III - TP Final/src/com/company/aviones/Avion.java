@@ -1,7 +1,7 @@
 package com.company.aviones;
 
 public abstract class Avion {
-
+    protected int id;
     protected double ltsComustible;
     protected double costoKm;
     protected int capacidad;
@@ -10,7 +10,8 @@ public abstract class Avion {
 
     public Avion(){}
 
-    public Avion(double ltsComustible, double costoKm, int capacidad, double maxVelocidad, Motor propulsion) {
+    public Avion(int id, double ltsComustible, double costoKm, int capacidad, double maxVelocidad, Motor propulsion) {
+        this.id = id;
         this.ltsComustible = ltsComustible;
         this.costoKm = costoKm;
         this.capacidad = capacidad;

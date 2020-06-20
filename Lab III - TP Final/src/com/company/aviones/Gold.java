@@ -7,7 +7,7 @@ public class Gold extends Avion {
     public Gold() {
     }
 
-    public Gold(double ltsComustible, double costoKm, int capacidad, double maxVelocidad, Motor propulsion) {
-        super(ltsComustible, costoKm, capacidad, maxVelocidad, propulsion);
+    public Gold(int id, double ltsComustible, double costoKm, int capacidad, double maxVelocidad, Motor propulsion) {
+        super(id, ltsComustible, costoKm, capacidad, maxVelocidad, propulsion);
     }
 }
