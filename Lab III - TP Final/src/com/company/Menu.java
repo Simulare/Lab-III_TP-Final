@@ -45,6 +45,7 @@ public class Menu extends Empresa{
                 case 0:
                     break;
                 case 1:
+                    /*
                     int dni = menuIdentificarCliente();
                     if (dni != -1){
 
@@ -53,8 +54,10 @@ public class Menu extends Empresa{
                             clienteActual = registrarCliente(dni);
                         }
                         // Funciones para comprar los vuelos
-                    }
 
+                    }
+                     */
+                    comprarVuelo();
                     break;
                 case 2:
                     menuListados();
