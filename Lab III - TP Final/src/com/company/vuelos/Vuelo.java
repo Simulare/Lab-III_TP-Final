@@ -87,16 +87,6 @@ public class Vuelo {
                 System.out.println("Te hemos asignado el avion nº: " + avionOk.getId() + "\n");
             }
         }
-
-
-        /// Verificar que el origen y el destino no sea el mismo
-
-        if (parametros[2].equals(parametros[3])) {
-            System.out.println("Me estas cargando " + cliente.getNombre() + "? Para que vas a pagar un vuelo para subir y bajar? Tanta plata tenes?");
-        }
-
-        /// Verificar que la cantidad de pasajeros no supere el max
-
     }
 
 

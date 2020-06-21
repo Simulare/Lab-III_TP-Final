@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Menu extends Empresa{
@@ -20,7 +21,7 @@ public class Menu extends Empresa{
     private static File fileClientes = new File(CLIENTES_FILE);
 
     public Menu(){
-        super(descargarClientesJSON(), new ArrayList<>(), new ArrayList<>());
+        super(descargarClientesJSON(), new HashMap<>(), new ArrayList<>());
         //Esto se va a modificar para cargar desde el archivo los vuelos y aviones.
     }
 
