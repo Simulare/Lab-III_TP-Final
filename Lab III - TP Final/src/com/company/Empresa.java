@@ -24,6 +24,16 @@ public abstract class Empresa {
 
     }
 
+    public void agregarAvion(Avion nuevo){
+        aviones.add(nuevo);
+    }
+
+    public void listarAviones(){
+        for (Avion avion : aviones){
+            System.out.println(avion);
+        }
+    }
+
     public static Cliente buscarCliente(int dni){
         for (Cliente cliente : clientes){
             if (cliente.getDni() == dni){
