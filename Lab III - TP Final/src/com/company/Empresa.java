@@ -8,16 +8,17 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public abstract class Empresa {
 
     protected static ArrayList<Cliente> clientes;
-    protected static ArrayList<Vuelo> vuelos; // Esto es para poder probar hasta hacer el tema de los vuelos
+    protected static Map<Date, ArrayList<Vuelo>> vuelos; // Esto es para poder probar hasta hacer el tema de los vuelos
     protected static ArrayList<Avion> aviones; // Esto tambien es solo para probar, depende lo que se decida para manejarlos
 
     public Empresa(){}
 
-    public Empresa(ArrayList<Cliente> clientes, ArrayList<Vuelo> vuelos, ArrayList<Avion> aviones) {
+    public Empresa(ArrayList<Cliente> clientes, Map<Date, ArrayList<Vuelo>> vuelos, ArrayList<Avion> aviones) {
         this.clientes = clientes;
         this.vuelos = vuelos;
         this.aviones = aviones;
@@ -95,8 +96,8 @@ public abstract class Empresa {
     }
 
     public static boolean consultaVueloDisponible(int idAvion ,Date fechaVuelo){
-        for(Vuelo vuelo: vuelos){
-            if(vuelo.getAvion().getId()==idAvion && vuelo.getFechaVuelo().equals(fechaVuelo)){
+        for(Vuelo vuelo: vuelos.get(fechaVuelo)){
+            if(vuelo.getAvion().getId()==idAvion){
                 return false;
             }
         }
