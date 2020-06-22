@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Vuelo {
@@ -28,8 +29,27 @@ public class Vuelo {
 
         System.out.print("DNI: ");
         String strDni = brTeclado.readLine();
-        System.out.print("Fecha (dd/mm/aaaa): ");
-        String strFecha = brTeclado.readLine();
+        int rest = 0;
+        do {
+
+            System.out.print("Fecha (dd/mm/aaaa): ");
+            String strFecha = brTeclado.readLine();
+
+            SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
+
+            parametros[1] = strFecha;
+
+            Date fecha = sdfg.parse(strFecha);
+
+            java.util.Date Fecha = new Date();
+
+            if (fecha.compareTo(Fecha) < 0) {
+                System.out.println("Fecha menor q la actual, kapo no seas boludo y compra algo para el futuro");
+            } else {
+                rest = 1;
+            }
+        }while(rest == 0);
+
         System.out.print("Origen:\n   1. Buenos Aires.\n   2. Cordoba.\n   3. Santiago de Chile.\n   4. Montevideo.\n ");
         int nOrigen = Integer.parseInt(brTeclado.readLine());
         System.out.print("Destino:\n   1. Buenos Aires.\n   2. Cordoba.\n   3. Santiago de Chile.\n   4. Montevideo.\n ");
@@ -39,14 +59,13 @@ public class Vuelo {
         System.out.print("Tipo de avion:\n   1. Gold.\n   2. Silver.\n   3. Bronze.\n");
         int nTipoAvion = Integer.parseInt(brTeclado.readLine());
 
-        SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
-        Date fecha = sdfg.parse(strFecha);
+
 
         Ciudad ciudades[] = Ciudad.values();
         TipoAvion tipos[] = TipoAvion.values();
 
         parametros[0] = strDni;
-        parametros[1] = strFecha;
+
         parametros[2] = ciudades[nOrigen - 1].name();
         parametros[3] = ciudades[nDestino - 1].name();
         parametros[4] = strCantPasajeros;
@@ -63,9 +82,6 @@ public class Vuelo {
             /// Verificar que para esa fecha hay aviones de ese tipo disponibles
 
 
-            /// Verificar que la fecha sea mayor que "hoy"
-            /// Verificar que la fecha sea mayor que "hoy"
-            /// falta hacer
 
             /// Verificar que el origen y el destino no sea el mismo
             if (parametros[2].equals(parametros[3])) {

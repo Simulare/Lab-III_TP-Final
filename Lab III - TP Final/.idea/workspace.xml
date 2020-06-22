@@ -19,7 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a594e25-8e2f-4b1a-9149-5a0bfbbfa14c" name="Default Changelist" comment="" />
+    <list default="true" id="9a594e25-8e2f-4b1a-9149-5a0bfbbfa14c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/com/company/vuelos/Vuelo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/vuelos/Vuelo.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
