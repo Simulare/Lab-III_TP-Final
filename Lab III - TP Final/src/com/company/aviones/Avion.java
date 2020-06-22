@@ -1,20 +1,5 @@
 package com.company.aviones;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type")
-
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Gold.class, name = "Gold"),
-        @JsonSubTypes.Type(value = Silver.class, name = "Silver"),
-        @JsonSubTypes.Type(value = Bronze.class, name = "Bronze"),
-})
-
 public abstract class Avion {
     protected int id;
     protected double ltsComustible;
@@ -26,8 +11,8 @@ public abstract class Avion {
 
     public Avion(){}
 
-    @JsonCreator
-    public Avion(@JsonProperty("id")int id, @JsonProperty("ltsCombustible") double ltsComustible, @JsonProperty("costoKm") double costoKm, @JsonProperty("capacidad") int capacidad, @JsonProperty ("maxVelocidad") double maxVelocidad, @JsonProperty("propulsion") Motor propulsion, @JsonProperty("tipoAvion") TipoAvion tipoAvion) {
+
+    public Avion(int id, double ltsComustible, double costoKm, int capacidad, double maxVelocidad, Motor propulsion, TipoAvion tipoAvion) {
         this.id = id;
         this.ltsComustible = ltsComustible;
         this.costoKm = costoKm;

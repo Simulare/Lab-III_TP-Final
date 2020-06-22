@@ -6,13 +6,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-        try {  //Esto despues lo acomodo
-            Menu.existenciaFiles();
-        } catch (IOException e) {
-        }
+
         Menu menu = new Menu();
         menu.iniciarMenu();
-        //Menu.listAvionesToJSONFile();
+        //Menu.listAvionesToJSONFile();     Si quieren cargar el archivo descomenten esto antes de ejecutar.
 
     }
 }

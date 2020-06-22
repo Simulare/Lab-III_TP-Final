@@ -1,7 +1,6 @@
 package com.company;
 
-import com.company.aviones.Avion;
-import com.company.aviones.TipoAvion;
+import com.company.aviones.*;
 import com.company.vuelos.Vuelo;
 
 import java.io.IOException;
@@ -14,24 +13,81 @@ public abstract class Empresa {
 
     protected static ArrayList<Cliente> clientes;
     protected static Map<Date, ArrayList<Vuelo>> vuelos; // Esto es para poder probar hasta hacer el tema de los vuelos
-    protected static ArrayList<Avion> aviones; // Esto tambien es solo para probar, depende lo que se decida para manejarlos
+    protected static ArrayList<Bronze> avionesBronze; // Esto tambien es solo para probar, depende lo que se decida para manejarlos
+    protected static ArrayList<Silver> avionesSilver;
+    protected static ArrayList<Gold> avionesGold;
 
     public Empresa(){}
 
-    public Empresa(ArrayList<Cliente> clientes, Map<Date, ArrayList<Vuelo>> vuelos, ArrayList<Avion> aviones) {
+    public Empresa(ArrayList<Cliente> clientes, Map<Date, ArrayList<Vuelo>> vuelos, ArrayList<Bronze> avionesBronze, ArrayList<Gold> avionesGold, ArrayList<Silver> avionesSilver){
         this.clientes = clientes;
         this.vuelos = vuelos;
-        this.aviones = aviones;
-
+        this.avionesBronze = avionesBronze;
+        this.avionesSilver = avionesSilver;
+        this.avionesGold = avionesGold;
     }
 
     public void agregarAvion(Avion nuevo){
-        aviones.add(nuevo);
+        if (nuevo instanceof Gold){
+            avionesGold.add((Gold) nuevo);
+
+        }else if (nuevo instanceof Silver){
+            avionesSilver.add((Silver)nuevo);
+
+        }else if (nuevo instanceof Bronze){
+            avionesBronze.add((Bronze)nuevo);
+        }
+    }
+
+    public Avion buscarAvion(int id){
+        Avion avion = null;
+
+        for(Bronze bronze: avionesBronze){
+            if (bronze.getId() == id){
+                avion = bronze;
+                break;
+            }
+        }
+         if (avion == null){
+             for(Silver silver: avionesSilver){
+                 if (silver.getId() == id){
+                     avion = silver;
+                     break;
+                 }
+             }
+             if (avion == null){
+                 for(Gold gold: avionesGold){
+                     if (gold.getId() == id){
+                         avion = gold;
+                         break;
+                     }
+                 }
+             }
+         }
+         return avion;
     }
 
     public void listarAviones(){
-        for (Avion avion : aviones){
-            System.out.println(avion);
+        for(Bronze bronze: avionesBronze){
+            System.out.println(bronze.getId() +"-"+ bronze.toString());
+        }
+        for(Silver silver: avionesSilver){
+            System.out.println(silver.getId() +"-"+ silver.toString());
+        }
+        for(Gold gold: avionesGold){
+            System.out.println(gold.getId() +"-"+ gold.toString());
+        }
+    }
+
+    public void eliminarAvion(Avion avion){
+        if (avion instanceof Gold){
+            avionesGold.remove(avion);
+
+        }else if (avion instanceof Silver){
+            avionesSilver.remove(avion);
+
+        }else if (avion instanceof Bronze){
+            avionesBronze.remove(avion);
         }
     }
 
@@ -53,6 +109,7 @@ public abstract class Empresa {
     }
 
     public void listarClientes(){
+
         for (Cliente cliente : clientes){
             System.out.println(cliente.toString());
         }
@@ -65,14 +122,14 @@ public abstract class Empresa {
         try {
             String[] parametros= new String[6];
             v.pedirDatosVuelo(parametros);
-            /*
+
             System.out.println(parametros[0]);
             System.out.println(parametros[1]);
             System.out.println(parametros[2]);
             System.out.println(parametros[3]);
             System.out.println(parametros[4]);
             System.out.println(parametros[5]);
-            */
+
             v.validarDatosVuelo(parametros);
 
 
@@ -82,14 +139,41 @@ public abstract class Empresa {
     }
 
     public static Avion consultaAvionDisponible(TipoAvion tipoAvion, Date fechaVuelo, int cantPasajeros){
-        for(Avion avion : aviones){
-            if(avion.getTipoAvion().equals(tipoAvion)){
-                if (avion.getCapacidad() >= cantPasajeros){
-                    boolean todoOk=consultaVueloDisponible(avion.getId(),fechaVuelo);
-                    if(todoOk==true){
-                        return avion;
+
+        switch (tipoAvion){
+            case GOLD ->{
+                for (Gold gold : avionesGold){
+                    if (gold.getCapacidad() >= cantPasajeros){
+                        boolean todoOk=consultaVueloDisponible(gold.getId(),fechaVuelo);
+                        if(todoOk==true){
+                            return gold;
+                        }
                     }
                 }
+                break;
+            }
+            case SILVER -> {
+                for (Silver silver : avionesSilver){
+                    if (silver.getCapacidad() >= cantPasajeros){
+                        boolean todoOk=consultaVueloDisponible(silver.getId(),fechaVuelo);
+                        if(todoOk==true){
+                            return silver;
+                        }
+                    }
+                }
+                break;
+            }
+
+            case BRONZE -> {
+                for (Bronze bronze : avionesBronze){
+                    if (bronze.getCapacidad() >= cantPasajeros){
+                        boolean todoOk=consultaVueloDisponible(bronze.getId(),fechaVuelo);
+                        if(todoOk==true){
+                            return bronze;
+                        }
+                    }
+                }
+                break;
             }
         }
         return null;

@@ -20,21 +20,26 @@ import java.util.Scanner;
 public class Menu extends Empresa{
 
     private static final String CLIENTES_FILE = "clientes.json";
-    private static final String AVIONES_FILE = "aviones.json";
+    private static final String BRONZE_FILE = "avionesBronze.json";
+    private static final String SILVER_FILE = "avionesSilver.json";
+    private static final String GOLD_FILE = "avionesGold.json";
 
     public static Scanner scanner = new Scanner(System.in);
     static ObjectMapper mapper = new ObjectMapper();
     private static File fileClientes = new File(CLIENTES_FILE);
-    private static File fileAviones = new File(AVIONES_FILE);
+    private static File fileBronze = new File(BRONZE_FILE);
+    private static File fileSilver = new File(SILVER_FILE);
+    private static File fileGold = new File(GOLD_FILE);
 
     public Menu(){
-
-        super(descargarClientesJSON(), new HashMap<>(), new ArrayList<>());
+        super(new ArrayList<>(), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        clientes = descargarClientesJSON();
+        descargarAvionesJSON();
 
         //Esto se va a modificar para cargar desde el archivo los vuelos y aviones.
     }
 
-    public static void existenciaFiles() throws IOException {
+   /* public static void existenciaFiles() throws IOException {
         try {
             if (!fileClientes.exists()){
                 fileClientes.createNewFile();
@@ -43,9 +48,18 @@ public class Menu extends Empresa{
                 fileAviones.createNewFile();
             }
         }catch (IOException e){}
-    }
+    }*/
 
     public void iniciarMenu(){
+
+        try {
+            fileBronze.createNewFile();
+            fileSilver.createNewFile();
+            fileGold.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         menuPrincipal();
     }
 
@@ -235,7 +249,8 @@ public class Menu extends Empresa{
 
             System.out.println("0. Volver\n" +
                     "1. Añadir avión.\n" +
-                    "2. Listar aviones.\n\n" +
+                    "2. Eliminar avión.\n" +
+                    "3. Listar aviones.\n\n" +
                     "Elegir opción:");
 
             respuesta = checkInt(scanner.nextLine());
@@ -243,17 +258,32 @@ public class Menu extends Empresa{
                 case 0:
                     break;
                 case 1:
-                    Avion avion1 = new Gold(1, 234.2, 4564.3, 6, 2223, Motor.HELICE, true, TipoAvion.GOLD);
-                    Avion avion2 = new Silver(2, 252.1, 2264.3, 7, 133, Motor.PISTONES, TipoAvion.SILVER);
-                    Avion avion3 = new Bronze(3, 3423.6, 4564.3, 6, 2223, Motor.REACCION, TipoAvion.BRONZE);
-                    Avion avion4 = new Gold(4, 2234, 775, 2, 243, Motor.PISTONES, true, TipoAvion.GOLD);
-                    aviones.add(avion1);
-                    aviones.add(avion2);
-                    aviones.add(avion3);
-                    aviones.add(avion4);
-
+                    cargarAvion();
                     break;
                 case 2:
+                    System.out.println("Ingrese el id del avión a borrar:");
+                    int id = checkInt(scanner.nextLine());
+                    Avion avion = buscarAvion(id);
+                    if (avion == null){
+                        System.out.println("No se encontró avión con el id ingresado.");
+                    }else{
+                        switch (avion.getTipoAvion()){
+                            case GOLD ->{
+                                avionesGold.remove(avion);
+                                break;
+                            }
+                            case BRONZE ->{
+                                avionesBronze.remove(avion);
+                                break;
+                            }
+                            case SILVER -> {
+                                avionesSilver.remove(avion);
+                                break;
+                            }
+                        }
+                        System.out.println("Avión eliminado exitosamente!");
+                    }
+                case 3:
                     listarAviones();
                     break;
                 default:
@@ -276,6 +306,8 @@ public class Menu extends Empresa{
 
     private static ArrayList<Cliente> descargarClientesJSON(){  //Devuelve un ArrayList con el archivo de clientes
         try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            mapper.setDateFormat(dateFormat);
             return mapper.readValue(fileClientes, new TypeReference<ArrayList<Cliente>>(){});
         }catch (IOException e){
             e.printStackTrace();
@@ -287,8 +319,10 @@ public class Menu extends Empresa{
     public static void listAvionesToJSONFile(){  //Guarda el arrayList de aviones en el archivo.
 
         try {
-            ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-            writer.writeValue(fileAviones, aviones);
+            mapper = new ObjectMapper();
+            mapper.writeValue(fileBronze, avionesBronze);
+            mapper.writeValue(fileSilver, avionesSilver);
+            mapper.writeValue(fileGold, avionesSilver);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -296,15 +330,83 @@ public class Menu extends Empresa{
         }
     }
 
-    private static ArrayList<Avion> descargarAvionesJSON(){  //Devuelve un ArrayList con el archivo de aviones
+    private static void descargarAvionesJSON(){  //Devuelve un ArrayList con el archivo de aviones
 
         try {
-            return mapper.readValue(fileAviones, ListaAviones.class);
+            mapper = new ObjectMapper();
+            avionesBronze = mapper.readValue(fileBronze, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Bronze.class));
+            avionesSilver = mapper.readValue(fileSilver, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Silver.class));
+            avionesGold = mapper.readValue(fileGold, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Gold.class));
+
         }catch (IOException e){
             e.printStackTrace();
             System.out.println("Error al cargar los aviones desde el archivo.");
         }
-        return new ArrayList<Avion>();
+    }
+
+    private void cargarAvion(){
+
+        boolean flag = true;
+
+        System.out.println("Tipo de avión:\n 1. Gold. \n2. Silver. \n3. Bronze.");
+        int opTipoAvion = scanner.nextInt();
+        System.out.println("Id:");
+        int id = scanner.nextInt();
+        System.out.println("Capacidad de combustible en lts.:");
+        double ltsCombustible = scanner.nextDouble();
+        System.out.println("Costo del km:");
+        double costoKm = scanner.nextDouble();
+        System.out.println("Capacidad:");
+        int capacidad = scanner.nextInt();
+        System.out.println("Max. Velocidad:");
+        double maxVelocidad = scanner.nextDouble();
+        System.out.println("Propulsión: \n1. Reacción. \n2. Hélice. \n3. Pistones.");
+        int opPropulsion = scanner.nextInt();
+
+        TipoAvion tipoAvion = null;
+        Motor propulsion = null;
+        boolean poseewifi = false;
+
+        switch (opPropulsion){
+            case 1:
+                propulsion = Motor.REACCION;
+                break;
+            case 2:
+                propulsion = Motor.HELICE;
+                break;
+            case 3:
+                propulsion = Motor.PISTONES;
+                break;
+            default:
+                flag = false;
+        }
+
+        if (flag)
+        switch (opTipoAvion){
+            case 1:
+                tipoAvion = TipoAvion.GOLD;
+                System.out.println("Posee Wifi: \n1. Si. \n2. No.");
+                int op = scanner.nextInt();
+                if (op == 1){
+                    poseewifi = true;
+                }
+                Gold gold = new Gold(id, ltsCombustible, costoKm, capacidad, maxVelocidad, propulsion, poseewifi, tipoAvion);
+                avionesGold.add(gold);
+                break;
+            case 2:
+                tipoAvion = TipoAvion.SILVER;
+                Silver silver = new Silver(id, ltsCombustible, costoKm, capacidad, maxVelocidad, propulsion, tipoAvion);
+                avionesSilver.add(silver);
+                break;
+            case 3:
+                tipoAvion = TipoAvion.BRONZE;
+                Bronze bronze = new Bronze(id, ltsCombustible, costoKm, capacidad, maxVelocidad, propulsion, tipoAvion);
+                avionesBronze.add(bronze);
+                break;
+            default:
+                System.out.println("Error en los datos cargados. No se guardó el avión cargado.");
+                break;
+        }
     }
 
     public static int checkInt (String entrada){ //Para evitar que se rompa el programa si se ingresa un string por teclado esperando int.
