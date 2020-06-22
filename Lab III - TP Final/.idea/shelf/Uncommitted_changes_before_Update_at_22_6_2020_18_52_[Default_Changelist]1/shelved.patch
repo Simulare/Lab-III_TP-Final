@@ -1,0 +1,74 @@
+Index: src/com/company/vuelos/Vuelo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.company.vuelos;\r\n\r\nimport com.company.Cliente;\r\nimport com.company.Empresa;\r\nimport com.company.aviones.Avion;\r\nimport com.company.aviones.TipoAvion;\r\n\r\nimport java.io.BufferedReader;\r\nimport java.io.IOException;\r\nimport java.io.InputStreamReader;\r\nimport java.text.ParseException;\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.Date;\r\n\r\npublic class Vuelo {\r\n    private Date fechaVuelo;\r\n    private Avion avion;\r\n    private Ciudad origen;\r\n    private Ciudad destino;\r\n    private Cliente cliente;\r\n    private int cantPasajeros;\r\n    private int costoVuelo;\r\n    private double kmsRecorrido;\r\n\r\n    public void pedirDatosVuelo(String[] parametros) throws IOException, ParseException {\r\n\r\n        BufferedReader brTeclado = new BufferedReader(new InputStreamReader(System.in));\r\n\r\n        System.out.print(\"DNI: \");\r\n        String strDni = brTeclado.readLine();\r\n        System.out.print(\"Fecha (dd/mm/aaaa): \");\r\n        String strFecha = brTeclado.readLine();\r\n        System.out.print(\"Origen:\\n   1. Buenos Aires.\\n   2. Cordoba.\\n   3. Santiago de Chile.\\n   4. Montevideo.\\n \");\r\n        int nOrigen = Integer.parseInt(brTeclado.readLine());\r\n        System.out.print(\"Destino:\\n   1. Buenos Aires.\\n   2. Cordoba.\\n   3. Santiago de Chile.\\n   4. Montevideo.\\n \");\r\n        int nDestino = Integer.parseInt(brTeclado.readLine());\r\n        System.out.print(\"Cantidad de pasajeros: \");\r\n        String strCantPasajeros = brTeclado.readLine();\r\n        System.out.print(\"Tipo de avion:\\n   1. Gold.\\n   2. Silver.\\n   3. Bronze.\\n\");\r\n        int nTipoAvion = Integer.parseInt(brTeclado.readLine());\r\n\r\n        SimpleDateFormat sdfg = new SimpleDateFormat(\"dd/MM/yyyy\");\r\n        Date fecha = sdfg.parse(strFecha);\r\n\r\n        Ciudad ciudades[] = Ciudad.values();\r\n        TipoAvion tipos[] = TipoAvion.values();\r\n\r\n        parametros[0] = strDni;\r\n        parametros[1] = strFecha;\r\n        parametros[2] = ciudades[nOrigen - 1].name();\r\n        parametros[3] = ciudades[nDestino - 1].name();\r\n        parametros[4] = strCantPasajeros;\r\n        parametros[5] = tipos[nTipoAvion - 1].name();\r\n    }\r\n\r\n    public void validarDatosVuelo(String[] parametros) throws IOException, ParseException {\r\n        /// Verificar que el dni exista en clientes\r\n        Cliente cliente = Empresa.buscarCliente(Integer.parseInt(parametros[0]));\r\n        if (cliente == null) {\r\n            System.out.println(\"ERROR: Cliente no encontrado :(\\n\");\r\n        } else {\r\n            System.out.println(\"Hola, \" + cliente.getNombre());\r\n            /// Verificar que para esa fecha hay aviones de ese tipo disponibles\r\n\r\n\r\n            /// Verificar que la fecha sea mayor que \"hoy\"\r\n            /// Verificar que la fecha sea mayor que \"hoy\"\r\n            /// falta hacer\r\n\r\n            /// Verificar que el origen y el destino no sea el mismo\r\n            if (parametros[2].equals(parametros[3])) {\r\n                System.out.println(\"Me estas cargando \" + cliente.getNombre() + \"? Para que vas a pagar un vuelo para subir y bajar? Tanta plata tenes?\");\r\n            }\r\n\r\n            /// Verificar que para esa fecha hay aviones de ese tipo disponibles\r\n            ///Casteos necesarios para consultaAvionDisponible\r\n\r\n            TipoAvion tipoAvion = TipoAvion.valueOf(parametros[5]);\r\n            SimpleDateFormat sdfg = new SimpleDateFormat(\"dd/MM/yyyy\");\r\n            Date fecha = sdfg.parse(parametros[1]);\r\n            int cantPax = Integer.parseInt(parametros[4]);\r\n\r\n            Avion avionOk = Empresa.consultaAvionDisponible(tipoAvion, fecha, cantPax);\r\n            if (avionOk == null) {\r\n                System.out.println(\"No hay aviones disponibles\\n\");\r\n            } else {\r\n                System.out.println(\"Te hemos asignado el avion nº: \" + avionOk.getId() + \"\\n\");\r\n            }\r\n        }\r\n\r\n\r\n        /// Verificar que el origen y el destino no sea el mismo\r\n\r\n        if (parametros[2].equals(parametros[3])) {\r\n            System.out.println(\"Me estas cargando \" + cliente.getNombre() + \"? Para que vas a pagar un vuelo para subir y bajar? Tanta plata tenes?\");\r\n        }\r\n\r\n        /// Verificar que la cantidad de pasajeros no supere el max\r\n\r\n    }\r\n\r\n\r\n\r\n    public double calcularDistancia (Ciudad origen, Ciudad destino) {\r\n        double distancia = 0;\r\n\r\n        if (origen == Ciudad.BUENOS_AIRES || destino == Ciudad.BUENOS_AIRES) {\r\n            if (origen == Ciudad.CORDOBA || destino == Ciudad.CORDOBA) {\r\n                distancia = 695; // Ruta Bs.as - Cordoba\r\n\r\n            } else if (origen == Ciudad.SANTIAGO_DE_CHILE || destino == Ciudad.SANTIAGO_DE_CHILE) {\r\n                distancia = 1400; // Ruta Bs.As - Santiago\r\n\r\n            } else if (origen == Ciudad.MONTEVIDEO || destino == Ciudad.MONTEVIDEO) {\r\n                distancia = 950; // Ruta Bs.As. - Montevideo\r\n            }\r\n\r\n        } else if (origen == Ciudad.CORDOBA || destino == Ciudad.CORDOBA) {\r\n            if (origen == Ciudad.MONTEVIDEO || destino == Ciudad.MONTEVIDEO) {\r\n                distancia = 1190; // Ruta Cordoba - Montevideo\r\n\r\n            } else if (origen == Ciudad.SANTIAGO_DE_CHILE || destino == Ciudad.SANTIAGO_DE_CHILE) {\r\n                distancia = 1050; // Ruta Cordoba - Santiago\r\n            }\r\n\r\n        } else if (origen == Ciudad.MONTEVIDEO || destino == Ciudad.MONTEVIDEO) {\r\n            if (origen == Ciudad.SANTIAGO_DE_CHILE || destino == Ciudad.SANTIAGO_DE_CHILE) {\r\n                distancia = 2100; // Ruta Montevideo - Santiago\r\n            }\r\n        }\r\n        return distancia;\r\n    }\r\n\r\n    /// Getters & Setters\r\n\r\n    public Date getFechaVuelo() {\r\n        return fechaVuelo;\r\n    }\r\n\r\n    public void setFechaVuelo(Date fechaVuelo) {\r\n        this.fechaVuelo = fechaVuelo;\r\n    }\r\n\r\n    public Avion getAvion() {\r\n        return avion;\r\n    }\r\n\r\n    public void setAvion(Avion avion) {\r\n        this.avion = avion;\r\n    }\r\n\r\n    public Ciudad getOrigen() {\r\n        return origen;\r\n    }\r\n\r\n    public void setOrigen(Ciudad origen) {\r\n        this.origen = origen;\r\n    }\r\n\r\n    public Ciudad getDestino() {\r\n        return destino;\r\n    }\r\n\r\n    public void setDestino(Ciudad destino) {\r\n        this.destino = destino;\r\n    }\r\n\r\n    public Cliente getCliente() {\r\n        return cliente;\r\n    }\r\n\r\n    public void setCliente(Cliente cliente) {\r\n        this.cliente = cliente;\r\n    }\r\n\r\n    public int getCantPasajeros() {\r\n        return cantPasajeros;\r\n    }\r\n\r\n    public void setCantPasajeros(int cantPasajeros) {\r\n        this.cantPasajeros = cantPasajeros;\r\n    }\r\n\r\n    public int getCostoVuelo() {\r\n        return costoVuelo;\r\n    }\r\n\r\n    public void setCostoVuelo(int costoVuelo) {\r\n        this.costoVuelo = costoVuelo;\r\n    }\r\n\r\n    public double getKmsRecorrido() {\r\n        return kmsRecorrido;\r\n    }\r\n\r\n    public void setKmsRecorrido(double kmsRecorrido) {\r\n        this.kmsRecorrido = kmsRecorrido;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/com/company/vuelos/Vuelo.java	(revision bbaa1dd7de05460203962f2e097fb3f99906c726)
++++ src/com/company/vuelos/Vuelo.java	(date 1592862617471)
+@@ -10,6 +10,7 @@
+ import java.io.InputStreamReader;
+ import java.text.ParseException;
+ import java.text.SimpleDateFormat;
++import java.util.Calendar;
+ import java.util.Date;
+ 
+ public class Vuelo {
+@@ -28,8 +29,27 @@
+ 
+         System.out.print("DNI: ");
+         String strDni = brTeclado.readLine();
+-        System.out.print("Fecha (dd/mm/aaaa): ");
+-        String strFecha = brTeclado.readLine();
++        int rest = 0;
++        do {
++
++            System.out.print("Fecha (dd/mm/aaaa): ");
++            String strFecha = brTeclado.readLine();
++
++            SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
++
++            parametros[1] = strFecha;
++
++            Date fecha = sdfg.parse(strFecha);
++
++            java.util.Date Fecha = new Date();
++
++            if (fecha.compareTo(Fecha) < 0) {
++                System.out.println("Fecha menor q la actual, kapo no seas boludo y compra algo para el futuro");
++            } else {
++                rest = 1;
++            }
++        }while(rest == 0);
++
+         System.out.print("Origen:\n   1. Buenos Aires.\n   2. Cordoba.\n   3. Santiago de Chile.\n   4. Montevideo.\n ");
+         int nOrigen = Integer.parseInt(brTeclado.readLine());
+         System.out.print("Destino:\n   1. Buenos Aires.\n   2. Cordoba.\n   3. Santiago de Chile.\n   4. Montevideo.\n ");
+@@ -39,14 +59,13 @@
+         System.out.print("Tipo de avion:\n   1. Gold.\n   2. Silver.\n   3. Bronze.\n");
+         int nTipoAvion = Integer.parseInt(brTeclado.readLine());
+ 
+-        SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
+-        Date fecha = sdfg.parse(strFecha);
++
+ 
+         Ciudad ciudades[] = Ciudad.values();
+         TipoAvion tipos[] = TipoAvion.values();
+ 
+         parametros[0] = strDni;
+-        parametros[1] = strFecha;
++
+         parametros[2] = ciudades[nOrigen - 1].name();
+         parametros[3] = ciudades[nDestino - 1].name();
+         parametros[4] = strCantPasajeros;
+@@ -63,9 +82,6 @@
+             /// Verificar que para esa fecha hay aviones de ese tipo disponibles
+ 
+ 
+-            /// Verificar que la fecha sea mayor que "hoy"
+-            /// Verificar que la fecha sea mayor que "hoy"
+-            /// falta hacer
+ 
+             /// Verificar que el origen y el destino no sea el mismo
+             if (parametros[2].equals(parametros[3])) {
