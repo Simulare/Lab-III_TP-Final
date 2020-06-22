@@ -1,13 +1,17 @@
 package com.company;
 
 import com.company.aviones.*;
+import com.company.vuelos.Ciudad;
 import com.company.vuelos.Vuelo;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+
+import static com.company.vuelos.Vuelo.*;
 
 public abstract class Empresa {
 
@@ -116,23 +120,42 @@ public abstract class Empresa {
     }
 
     public static void comprarVuelo(){
-        Vuelo v = new Vuelo();
+
         Date fecha = null;
         int dni=0;
         try {
             String[] parametros= new String[6];
-            v.pedirDatosVuelo(parametros);
+            pedirDatosVuelo(parametros);
 
-            System.out.println(parametros[0]);
-            System.out.println(parametros[1]);
-            System.out.println(parametros[2]);
-            System.out.println(parametros[3]);
-            System.out.println(parametros[4]);
-            System.out.println(parametros[5]);
+            System.out.println(parametros[0]);//dni
+            System.out.println(parametros[1]);//fecha
+            System.out.println(parametros[2]);//origen
+            System.out.println(parametros[3]);//destino
+            System.out.println(parametros[4]);//cantPasajeros
+            System.out.println(parametros[5]);//tipoAvion
 
-            v.validarDatosVuelo(parametros);
+            Avion avionOk = validarDatosVuelo(parametros);
 
+            if (avionOk!=null){
 
+                Cliente cli=buscarCliente(Integer.parseInt(parametros[0]));
+                SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
+                Date dateVuelo = sdfg.parse(parametros[1]);
+                Ciudad origen= Ciudad.valueOf(parametros[2]);
+                Ciudad destino= Ciudad.valueOf(parametros[3]);
+                int cantPasajeros=Integer.parseInt(parametros[4]);
+                TipoAvion tipoAvion=TipoAvion.valueOf(parametros[5]);
+
+                double kmsRecorrido = calcularDistancia(origen,destino);
+                double costoVuelo = calculaCostoVuelo(kmsRecorrido,avionOk.getCostoKm(),cantPasajeros,tipoAvion);
+
+                Vuelo v = new Vuelo(dateVuelo,avionOk,origen,destino,cli,cantPasajeros,costoVuelo,kmsRecorrido);
+                ArrayList<Vuelo> arrayListVuelos=new ArrayList<Vuelo>();
+                arrayListVuelos.add(v);
+                vuelos.put(dateVuelo,arrayListVuelos);
+
+                System.out.println(v.getFechaVuelo()+"-"+v.getAvion().getId()+"-"+v.getOrigen()+"-"+v.getDestino()+"-"+v.getCliente().getNombre()+"-"+v.getCostoVuelo());
+            }
         }catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -180,9 +203,11 @@ public abstract class Empresa {
     }
 
     public static boolean consultaVueloDisponible(int idAvion ,Date fechaVuelo){
-        for(Vuelo vuelo: vuelos.get(fechaVuelo)){
-            if(vuelo.getAvion().getId()==idAvion){
-                return false;
+        if(vuelos.containsKey(fechaVuelo)){
+            for(Vuelo vuelo: vuelos.get(fechaVuelo)){
+                if(vuelo.getAvion().getId()==idAvion){
+                    return false;
+                }
             }
         }
         return true;

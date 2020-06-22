@@ -6,8 +6,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+//import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+//import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import java.io.File;
@@ -322,7 +322,7 @@ public class Menu extends Empresa{
             mapper = new ObjectMapper();
             mapper.writeValue(fileBronze, avionesBronze);
             mapper.writeValue(fileSilver, avionesSilver);
-            mapper.writeValue(fileGold, avionesSilver);
+            mapper.writeValue(fileGold, avionesGold);
 
         }catch (Exception e){
             e.printStackTrace();

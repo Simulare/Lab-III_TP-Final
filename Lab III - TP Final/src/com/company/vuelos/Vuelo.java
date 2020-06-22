@@ -19,10 +19,21 @@ public class Vuelo {
     private Ciudad destino;
     private Cliente cliente;
     private int cantPasajeros;
-    private int costoVuelo;
+    private double costoVuelo;
     private double kmsRecorrido;
 
-    public void pedirDatosVuelo(String[] parametros) throws IOException, ParseException {
+    public Vuelo(Date fechaVuelo, Avion avion, Ciudad origen, Ciudad destino, Cliente cliente, int cantPasajeros, double costoVuelo, double kmsRecorrido) {
+        this.fechaVuelo = fechaVuelo;
+        this.avion = avion;
+        this.origen = origen;
+        this.destino = destino;
+        this.cliente = cliente;
+        this.cantPasajeros = cantPasajeros;
+        this.costoVuelo = costoVuelo;
+        this.kmsRecorrido = kmsRecorrido;
+    }
+
+    public static void pedirDatosVuelo(String[] parametros) throws IOException, ParseException {
 
         BufferedReader brTeclado = new BufferedReader(new InputStreamReader(System.in));
 
@@ -53,9 +64,11 @@ public class Vuelo {
         parametros[5] = tipos[nTipoAvion - 1].name();
     }
 
-    public void validarDatosVuelo(String[] parametros) throws IOException, ParseException {
+    public static Avion validarDatosVuelo(String[] parametros) throws IOException, ParseException {
         /// Verificar que el dni exista en clientes
         Cliente cliente = Empresa.buscarCliente(Integer.parseInt(parametros[0]));
+        Avion avionOk=null;
+
         if (cliente == null) {
             System.out.println("ERROR: Cliente no encontrado :(\n");
         } else {
@@ -80,18 +93,19 @@ public class Vuelo {
             Date fecha = sdfg.parse(parametros[1]);
             int cantPax = Integer.parseInt(parametros[4]);
 
-            Avion avionOk = Empresa.consultaAvionDisponible(tipoAvion, fecha, cantPax);
+            avionOk = Empresa.consultaAvionDisponible(tipoAvion, fecha, cantPax);
             if (avionOk == null) {
                 System.out.println("No hay aviones disponibles\n");
             } else {
                 System.out.println("Te hemos asignado el avion nº: " + avionOk.getId() + "\n");
             }
         }
+        return avionOk;
     }
 
 
 
-    public double calcularDistancia (Ciudad origen, Ciudad destino) {
+    public static double calcularDistancia (Ciudad origen, Ciudad destino) {
         double distancia = 0;
 
         if (origen == Ciudad.BUENOS_AIRES || destino == Ciudad.BUENOS_AIRES) {
@@ -119,6 +133,22 @@ public class Vuelo {
             }
         }
         return distancia;
+    }
+
+    public static double calculaCostoVuelo(double cantKms,double costoKms, int cantPasajeros,TipoAvion tipoAvion){
+        int tarifa;
+        double costoTotal;
+        if (tipoAvion.name().equals(TipoAvion.BRONZE)){
+            tarifa=3000;
+        }else{
+            if (tipoAvion.name().equals(TipoAvion.SILVER)){
+                tarifa=4000;
+            }else{
+                tarifa=6000;
+            }
+        }
+        costoTotal=(cantKms*costoKms)+(cantPasajeros*3500)+tarifa;
+        return costoTotal;
     }
 
     /// Getters & Setters
@@ -171,7 +201,7 @@ public class Vuelo {
         this.cantPasajeros = cantPasajeros;
     }
 
-    public int getCostoVuelo() {
+    public double getCostoVuelo() {
         return costoVuelo;
     }
 
