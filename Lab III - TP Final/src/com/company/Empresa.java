@@ -5,8 +5,10 @@ import com.company.vuelos.Ciudad;
 import com.company.vuelos.Vuelo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -334,6 +336,53 @@ public abstract class Empresa {
         mapperVuelos.setDateFormat(sdfg);
         try {
             mapperVuelos.writeValue(fileVuelos,vuelos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void Cancelacion(){
+
+        try{
+
+            System.out.println("Ingrese su dni para ver sus vuelos: \n");
+            int dni = Menu.scanner.nextInt();
+            int i=0;
+
+            for (Map.Entry<Date, ArrayList<Vuelo>> entry : vuelos.entrySet()){
+
+                ArrayList<Vuelo> lista = entry.getValue();
+
+                for (Vuelo vuelo : lista){
+
+                    if(vuelo.getCliente().getDni() == dni){
+                        i++;
+                        System.out.println( i + "---------->" + vuelo.toString());
+                    }
+                }
+            }
+            if(i>0){
+                System.out.println("Ingrese el id  del vuelo que desea cancelar: \n");
+
+                BufferedReader brTeclado = new BufferedReader(new InputStreamReader(System.in));
+
+                String strFecha = brTeclado.readLine();
+
+                SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
+
+                Date cancel = sdfg.parse(strFecha);
+                int flag = CalcularDifDia(cancel.getTime());
+                if(flag == 1){
+                    System.out.println(vuelos.remove(cancel ));
+                }
+                guardarVuelosToJson();
+            }else{
+                System.out.println("Error, no hay vuelos para cancelar, si queres cancelar compra un vuelo");
+            }
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
