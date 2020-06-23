@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -54,7 +56,6 @@ public class Vuelo {
 
             try {
                 Date fecha = sdfg.parse(strFecha);
-
                 java.util.Date Fecha = new Date();
 
                 if (fecha.compareTo(Fecha) < 0) {
