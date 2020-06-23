@@ -184,7 +184,7 @@ public abstract class Empresa {
 
     public void listarVuelos(){
         for (Map.Entry<Date, ArrayList<Vuelo>> entry : vuelos.entrySet()){
-            System.out.println(" ---- Vuelos del " + entry.getKey() + " ----\n");
+            System.out.println("\n---- Vuelos del " + entry.getKey() + " ----\n");
             for (Vuelo vuelo : entry.getValue()){
                 System.out.println(vuelo.toString());
             }
@@ -362,7 +362,7 @@ public abstract class Empresa {
                 }
             }
             if(i>0){
-                System.out.println("Ingrese el id  del vuelo que desea cancelar: \n");
+                System.out.println("Ingrese la fecha del vuelo que desea cancelar (dd/mm/aaaa): \n");
 
                 BufferedReader brTeclado = new BufferedReader(new InputStreamReader(System.in));
 
@@ -373,7 +373,9 @@ public abstract class Empresa {
                 Date cancel = sdfg.parse(strFecha);
                 int flag = CalcularDifDia(cancel.getTime());
                 if(flag == 1){
-                    System.out.println(vuelos.remove(cancel ));
+                    vuelos.remove(cancel);
+                    System.out.println("El vuelo ha sido cancelado.");
+
                 }
                 guardarVuelosToJson();
             }else{

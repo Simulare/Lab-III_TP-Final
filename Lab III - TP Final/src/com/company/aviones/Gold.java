@@ -1,7 +1,7 @@
 package com.company.aviones;
 
 public class Gold extends Avion {
-
+    private static final boolean CATERING = true;
     private boolean poseeWifi;
 
     public Gold() {

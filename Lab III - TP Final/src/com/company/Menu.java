@@ -82,6 +82,9 @@ public class Menu extends Empresa{
                     break;
                 case 1:
                     comprarVuelo();
+                    System.out.println("\n... Presione ENTER para continuar ...");
+                    pausarConsola();
+                    scanner.nextLine();
                     break;
                 case 2:
                     menuListados();
@@ -125,6 +128,9 @@ public class Menu extends Empresa{
                 case 6:
 
                     Cancelacion();
+                    System.out.println("\n... Presione ENTER para continuar ...");
+                    pausarConsola();
+                    scanner.nextLine();
                     break;
 
                 default:

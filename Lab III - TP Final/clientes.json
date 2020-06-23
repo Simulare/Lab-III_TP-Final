@@ -13,4 +13,9 @@
   "apellido" : "Rodriguez",
   "dni" : 11222333,
   "edad" : 22
+}, {
+  "nombre" : "Jose",
+  "apellido" : "Ferti",
+  "dni" : 42369523,
+  "edad" : 33
 } ]
