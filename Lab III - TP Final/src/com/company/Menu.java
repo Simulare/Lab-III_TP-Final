@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.aviones.*;
+import com.company.vuelos.Ciudad;
 import com.company.vuelos.Vuelo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 
 public class Menu extends Empresa{
@@ -34,8 +36,8 @@ public class Menu extends Empresa{
     public Menu(){
         super(new ArrayList<>(), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         clientes = descargarClientesJSON();
-        vuelos=descargarVuelosJSON();
         descargarAvionesJSON();
+        vuelos=descargarVuelosJSON();
 
         //Esto se va a modificar para cargar desde el archivo los vuelos y aviones.
     }
@@ -314,6 +316,16 @@ public class Menu extends Empresa{
         }
     }
 
+    public static void listVuelosToJSONFile (){    // Guarda el ArrayList en el archivo
+        try {
+            ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+            writer.writeValue(fileVuelos, vuelos);
+        }catch (IOException e){
+            e.printStackTrace();
+            System.out.println("Error al guardar los vuelos en el archivo.");
+        }
+    }
+
     private static ArrayList<Cliente> descargarClientesJSON(){  //Devuelve un ArrayList con el archivo de clientes
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -339,7 +351,7 @@ public class Menu extends Empresa{
             return vuelos;
         }catch (IOException e){
             e.printStackTrace();
-            System.out.println("Error al cargar los clientes desde el archivo.");
+            System.out.println("Error al cargar los vuelos desde el archivo.");
         }
         return new HashMap<Date, ArrayList<Vuelo>>();
     }
