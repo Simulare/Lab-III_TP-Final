@@ -240,7 +240,20 @@ public abstract class Empresa {
         }
     }
 
+    public int CalcularDifDia(long vuelo){     ///Funcion que devuelve flag 1 si la fecha es mayor a 24 horas de hoy
 
+        int flag = 0;
+        java.util.Date hoy = new Date();
+
+        long today = vuelo - hoy.getTime();
+
+        if(today > 86400000){
+            flag = 1;
+        }
+
+        return flag;
+
+    }
 
 
 }
