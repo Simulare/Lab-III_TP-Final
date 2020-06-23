@@ -13,9 +13,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class Menu extends Empresa{
 
@@ -24,6 +22,7 @@ public class Menu extends Empresa{
     private static final String SILVER_FILE = "avionesSilver.json";
     private static final String GOLD_FILE = "avionesGold.json";
 
+
     public static Scanner scanner = new Scanner(System.in);
     static ObjectMapper mapper = new ObjectMapper();
     private static File fileClientes = new File(CLIENTES_FILE);
@@ -31,9 +30,11 @@ public class Menu extends Empresa{
     private static File fileSilver = new File(SILVER_FILE);
     private static File fileGold = new File(GOLD_FILE);
 
+
     public Menu(){
         super(new ArrayList<>(), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         clientes = descargarClientesJSON();
+        vuelos=descargarVuelosJSON();
         descargarAvionesJSON();
 
         //Esto se va a modificar para cargar desde el archivo los vuelos y aviones.
@@ -314,6 +315,24 @@ public class Menu extends Empresa{
             System.out.println("Error al cargar los clientes desde el archivo.");
         }
         return new ArrayList<Cliente>();
+    }
+
+    private static Map<Date, ArrayList<Vuelo>> descargarVuelosJSON(){  //Devuelve un Map con el archivo de vuelos
+        try {
+         //   avionesBronze = mapper.readValue(fileBronze, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Bronze.class));
+            ObjectMapper mapperVuelos =new ObjectMapper();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            mapperVuelos.setDateFormat(dateFormat);
+            //HashMap<Date, ArrayList<Vuelo>> vuelos = mapperVuelos.readValue(fileVuelos, new TypeReference<HashMap<Date, mapperVuelos.getTypeFactory()ArrayList<Vuelo>>>(){});
+            TypeReference<HashMap<Date, ArrayList<Vuelo>>> typeRef=new TypeReference<HashMap<Date, ArrayList<Vuelo>>>(){};
+            HashMap<Date, ArrayList<Vuelo>> vuelos = mapperVuelos.readValue(fileVuelos,typeRef);
+
+            return vuelos;
+        }catch (IOException e){
+            e.printStackTrace();
+            System.out.println("Error al cargar los clientes desde el archivo.");
+        }
+        return new HashMap<Date, ArrayList<Vuelo>>();
     }
 
     public static void listAvionesToJSONFile(){  //Guarda el arrayList de aviones en el archivo.
