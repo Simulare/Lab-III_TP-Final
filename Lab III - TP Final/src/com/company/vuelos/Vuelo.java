@@ -50,14 +50,18 @@ public class Vuelo {
 
             parametros[1] = strFecha;
 
-            Date fecha = sdfg.parse(strFecha);
+            try {
+                Date fecha = sdfg.parse(strFecha);
 
-            java.util.Date Fecha = new Date();
+                java.util.Date Fecha = new Date();
 
-            if (fecha.compareTo(Fecha) < 0) {
-                System.out.println("Fecha menor q la actual, kapo no seas boludo y compra algo para el futuro");
-            } else {
-                rest = 1;
+                if (fecha.compareTo(Fecha) < 0) {
+                    System.out.println("Fecha menor q la actual, kapo no seas boludo y compra algo para el futuro");
+                } else {
+                    rest = 1;
+                }
+            }catch (ParseException e){
+                System.out.println("Error. La fecha debe ingresarse en el formato indicado.");
             }
         }while(rest == 0);
 

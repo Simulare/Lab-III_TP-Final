@@ -39,27 +39,26 @@ public class Menu extends Empresa{
         //Esto se va a modificar para cargar desde el archivo los vuelos y aviones.
     }
 
-   /* public static void existenciaFiles() throws IOException {
+    public static void existenciaFiles() {
         try {
             if (!fileClientes.exists()){
                 fileClientes.createNewFile();
             }
-            if (!fileAviones.exists()){
-                fileAviones.createNewFile();
+            if (!fileGold.exists()){
+                fileGold.createNewFile();
+            }
+            if (!fileSilver.exists()){
+                fileSilver.createNewFile();
+            }
+            if (!fileBronze.exists()){
+                fileBronze.createNewFile();
             }
         }catch (IOException e){}
-    }*/
+    }
 
     public void iniciarMenu(){
 
-        try {
-            fileBronze.createNewFile();
-            fileSilver.createNewFile();
-            fileGold.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        existenciaFiles();
         menuPrincipal();
     }
 
@@ -283,8 +282,18 @@ public class Menu extends Empresa{
                         }
                         System.out.println("Avión eliminado exitosamente!");
                     }
+                    System.out.println("\n... Presione ENTER para continuar ...");
+                    pausarConsola();
+                    scanner.nextLine();
+                    break;
                 case 3:
+                    System.out.println(" -------------------------------------------------------");
+                    System.out.println("             <<<<< LISTADO DE AVIONES >>>>>");
+                    System.out.println(" -------------------------------------------------------\n");
                     listarAviones();
+                    System.out.println("\n... Presione ENTER para continuar ...");
+                    pausarConsola();
+                    scanner.nextLine();
                     break;
                 default:
                     System.out.println("Opción inválida.");
@@ -348,20 +357,20 @@ public class Menu extends Empresa{
 
         boolean flag = true;
 
-        System.out.println("Tipo de avión:\n 1. Gold. \n2. Silver. \n3. Bronze.");
-        int opTipoAvion = scanner.nextInt();
+        System.out.println("Tipo de avión:\n1.Gold. \n2. Silver. \n3. Bronze.");
+        int opTipoAvion = checkInt(scanner.nextLine());
         System.out.println("Id:");
-        int id = scanner.nextInt();
+        int id = checkInt(scanner.nextLine());
         System.out.println("Capacidad de combustible en lts.:");
-        double ltsCombustible = scanner.nextDouble();
+        double ltsCombustible = checkDouble(scanner.nextLine());
         System.out.println("Costo del km:");
-        double costoKm = scanner.nextDouble();
+        double costoKm = checkDouble(scanner.nextLine());
         System.out.println("Capacidad:");
-        int capacidad = scanner.nextInt();
+        int capacidad = checkInt(scanner.nextLine());
         System.out.println("Max. Velocidad:");
-        double maxVelocidad = scanner.nextDouble();
+        double maxVelocidad = checkDouble(scanner.nextLine());
         System.out.println("Propulsión: \n1. Reacción. \n2. Hélice. \n3. Pistones.");
-        int opPropulsion = scanner.nextInt();
+        int opPropulsion = checkInt(scanner.nextLine());
 
         TipoAvion tipoAvion = null;
         Motor propulsion = null;
@@ -379,6 +388,11 @@ public class Menu extends Empresa{
                 break;
             default:
                 flag = false;
+        }
+
+        //Verifica que el dato ingresado corresponda con el tipo de dato se espera, si es -1 no es el tipo de dato correcto.
+        if (opTipoAvion == -1 || id == -1 || ltsCombustible == -1 || costoKm == -1 || capacidad == -1 || maxVelocidad == -1 || opPropulsion == -1){
+            flag = false;
         }
 
         if (flag)
@@ -404,15 +418,33 @@ public class Menu extends Empresa{
                 avionesBronze.add(bronze);
                 break;
             default:
-                System.out.println("Error en los datos cargados. No se guardó el avión cargado.");
                 break;
         }
+        if (flag == false){
+
+            System.out.println( "Error en los datos cargados, no son válidos. No se guardó el avión.");;
+        }else{
+            System.out.println("           +++ Avión guardado con éxito! +++");
+        }
+        System.out.println("\n... Presione ENTER para continuar ...");
+        pausarConsola();
+        scanner.nextLine();
     }
 
     public static int checkInt (String entrada){ //Para evitar que se rompa el programa si se ingresa un string por teclado esperando int.
         int salida;
         try {
             salida = Integer.parseInt(entrada);
+        }catch (NumberFormatException e){
+            salida = -1;
+        }
+        return salida;
+    }
+
+    public static double checkDouble (String entrada){ //Para evitar que se rompa el programa si se ingresa un string por teclado esperando double.
+        double salida;
+        try {
+            salida = Double.parseDouble(entrada);
         }catch (NumberFormatException e){
             salida = -1;
         }
