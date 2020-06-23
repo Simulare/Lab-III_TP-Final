@@ -124,7 +124,7 @@ public class Menu extends Empresa{
 
                 case 6:
 
-                    //Cancelar vuelo
+                    Cancelacion();
                     break;
 
                 default:

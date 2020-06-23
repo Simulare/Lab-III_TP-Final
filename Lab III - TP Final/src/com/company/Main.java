@@ -7,7 +7,6 @@ public class Main {
 
         Menu menu = new Menu();
         menu.iniciarMenu();
-        //Menu.listAvionesToJSONFile();     Si quieren cargar el archivo descomenten esto antes de ejecutar.
 
     }
 }
