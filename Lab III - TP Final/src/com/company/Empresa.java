@@ -3,7 +3,9 @@ package com.company;
 import com.company.aviones.*;
 import com.company.vuelos.Ciudad;
 import com.company.vuelos.Vuelo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +22,9 @@ public abstract class Empresa {
     protected static ArrayList<Bronze> avionesBronze; // Esto tambien es solo para probar, depende lo que se decida para manejarlos
     protected static ArrayList<Silver> avionesSilver;
     protected static ArrayList<Gold> avionesGold;
+
+    protected static final String VUELOS_FILE = "vuelos.json";
+    protected static File fileVuelos = new File(VUELOS_FILE);
 
     public Empresa(){}
 
@@ -123,6 +128,15 @@ public abstract class Empresa {
 
         Date fecha = null;
         int dni=0;
+
+        for(ArrayList<Vuelo> aVuelos : vuelos.values()){
+            for(Vuelo v:aVuelos){
+                System.out.println(v.getFechaVuelo()+"-"+v.getAvion().getId()+"-"+v.getOrigen()+"-"+v.getDestino()+"-"+v.getCliente().getNombre()+"-"+v.getCostoVuelo());
+            }
+        }
+
+
+
         try {
             String[] parametros= new String[6];
             pedirDatosVuelo(parametros);
@@ -150,11 +164,15 @@ public abstract class Empresa {
                 double costoVuelo = calculaCostoVuelo(kmsRecorrido,avionOk.getCostoKm(),cantPasajeros,tipoAvion);
 
                 Vuelo v = new Vuelo(dateVuelo,avionOk,origen,destino,cli,cantPasajeros,costoVuelo,kmsRecorrido);
-                ArrayList<Vuelo> arrayListVuelos=new ArrayList<Vuelo>();
-                arrayListVuelos.add(v);
-                vuelos.put(dateVuelo,arrayListVuelos);
+                ArrayList<Vuelo> arrVuelos=new ArrayList<Vuelo>();
+                if(vuelos.containsKey(dateVuelo)) {
+                    arrVuelos = vuelos.get(dateVuelo);
+                }
+                arrVuelos.add(v);
+                vuelos.put(dateVuelo,arrVuelos);
 
                 System.out.println(v.getFechaVuelo()+"-"+v.getAvion().getId()+"-"+v.getOrigen()+"-"+v.getDestino()+"-"+v.getCliente().getNombre()+"-"+v.getCostoVuelo());
+                guardarVuelosToJson();
             }
         }catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -213,6 +231,14 @@ public abstract class Empresa {
         return true;
     }
 
+    public static void guardarVuelosToJson(){
+        ObjectMapper mapperVuelos = new ObjectMapper();
+        try {
+            mapperVuelos.writeValue(fileVuelos,vuelos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
