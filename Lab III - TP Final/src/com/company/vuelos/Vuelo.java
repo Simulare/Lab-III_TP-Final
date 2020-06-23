@@ -17,7 +17,7 @@ import java.util.Date;
 
 public class Vuelo {
     private Date fechaVuelo;
-    private Avion avion;
+    private int idAvion;
     private Ciudad origen;
     private Ciudad destino;
     private Cliente cliente;
@@ -27,9 +27,9 @@ public class Vuelo {
 
     public Vuelo(){}
 
-    public Vuelo(Date fechaVuelo, Avion avion, Ciudad origen, Ciudad destino, Cliente cliente, int cantPasajeros, double costoVuelo, double kmsRecorrido) {
+    public Vuelo(Date fechaVuelo, int idAvion, Ciudad origen, Ciudad destino, Cliente cliente, int cantPasajeros, double costoVuelo, double kmsRecorrido) {
         this.fechaVuelo = fechaVuelo;
-        this.avion = avion;
+        this.idAvion = idAvion;
         this.origen = origen;
         this.destino = destino;
         this.cliente = cliente;
@@ -90,43 +90,6 @@ public class Vuelo {
         parametros[5] = tipos[nTipoAvion - 1].name();
     }
 
-    public static Avion validarDatosVuelo(String[] parametros) throws IOException, ParseException {
-        /// Verificar que el dni exista en clientes
-        Cliente cliente = Empresa.buscarCliente(Integer.parseInt(parametros[0]));
-        Avion avionOk=null;
-
-        if (cliente == null) {
-            System.out.println("ERROR: Cliente no encontrado :(\n");
-        } else {
-            System.out.println("Hola, " + cliente.getNombre());
-            /// Verificar que para esa fecha hay aviones de ese tipo disponibles
-
-
-
-            /// Verificar que el origen y el destino no sea el mismo
-            if (parametros[2].equals(parametros[3])) {
-                System.out.println("Me estas cargando " + cliente.getNombre() + "? Para que vas a pagar un vuelo para subir y bajar? Tanta plata tenes?");
-            }
-
-            /// Verificar que para esa fecha hay aviones de ese tipo disponibles
-            ///Casteos necesarios para consultaAvionDisponible
-
-            TipoAvion tipoAvion = TipoAvion.valueOf(parametros[5]);
-            SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
-            Date fecha = sdfg.parse(parametros[1]);
-            int cantPax = Integer.parseInt(parametros[4]);
-
-            avionOk = Empresa.consultaAvionDisponible(tipoAvion, fecha, cantPax);
-            if (avionOk == null) {
-                System.out.println("No hay aviones disponibles\n");
-            } else {
-                System.out.println("Te hemos asignado el avion nº: " + avionOk.getId() + "\n");
-            }
-        }
-        return avionOk;
-    }
-
-
 
     public static double calcularDistancia (Ciudad origen, Ciudad destino) {
         double distancia = 0;
@@ -184,12 +147,12 @@ public class Vuelo {
         this.fechaVuelo = fechaVuelo;
     }
 
-    public Avion getAvion() {
-        return avion;
+    public int getIdAvion() {
+        return idAvion;
     }
 
-    public void setAvion(Avion avion) {
-        this.avion = avion;
+    public void setIdAvion(int idAvion) {
+        this.idAvion = idAvion;
     }
 
     public Ciudad getOrigen() {
@@ -238,5 +201,12 @@ public class Vuelo {
 
     public void setKmsRecorrido(double kmsRecorrido) {
         this.kmsRecorrido = kmsRecorrido;
+    }
+
+    @Override
+    public String toString(){
+        return "Vuelo [ Fecha: " + fechaVuelo + " - ID Avión: " + idAvion + " - Origen: " + origen +
+                " - Destino: " + " - DNI Cliente: " + cliente.getDni() +  " - cant. Asientos: " + cantPasajeros +
+                " - Costo vuelo: " + costoVuelo + " - Kms. recorridos: " + kmsRecorrido + "]";
     }
 }

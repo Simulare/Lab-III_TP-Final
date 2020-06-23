@@ -157,7 +157,10 @@ public class Menu extends Empresa{
                 case 0:
                     break;
                 case 1:
-                    ///Menu para listar vuelos
+                    listarVuelos();
+                    System.out.println("\n... Presione ENTER para continuar ...");
+                    pausarConsola();
+                    scanner.nextLine();
                     break;
                 case 2:
                     listadosClientes();
@@ -316,15 +319,6 @@ public class Menu extends Empresa{
         }
     }
 
-    public static void listVuelosToJSONFile (){    // Guarda el ArrayList en el archivo
-        try {
-            ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-            writer.writeValue(fileVuelos, vuelos);
-        }catch (IOException e){
-            e.printStackTrace();
-            System.out.println("Error al guardar los vuelos en el archivo.");
-        }
-    }
 
     private static ArrayList<Cliente> descargarClientesJSON(){  //Devuelve un ArrayList con el archivo de clientes
         try {
@@ -342,8 +336,8 @@ public class Menu extends Empresa{
         try {
          //   avionesBronze = mapper.readValue(fileBronze, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Bronze.class));
             ObjectMapper mapperVuelos =new ObjectMapper();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-            mapperVuelos.setDateFormat(dateFormat);
+            SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
+            mapperVuelos.setDateFormat(sdfg);
             //HashMap<Date, ArrayList<Vuelo>> vuelos = mapperVuelos.readValue(fileVuelos, new TypeReference<HashMap<Date, mapperVuelos.getTypeFactory()ArrayList<Vuelo>>>(){});
             TypeReference<HashMap<Date, ArrayList<Vuelo>>> typeRef=new TypeReference<HashMap<Date, ArrayList<Vuelo>>>(){};
             HashMap<Date, ArrayList<Vuelo>> vuelos = mapperVuelos.readValue(fileVuelos,typeRef);

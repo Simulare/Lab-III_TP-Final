@@ -124,18 +124,25 @@ public abstract class Empresa {
         }
     }
 
-    public static void comprarVuelo(){
+    public void listarVuelos(){
+        for (Map.Entry<Date, ArrayList<Vuelo>> entry : vuelos.entrySet()){
+            System.out.println("Vuelos del " + entry.getKey());
+            for (Vuelo vuelo : entry.getValue()){
+                System.out.println(vuelo.toString());
+            }
+        }
+    }
+
+    public void comprarVuelo(){
 
         Date fecha = null;
         int dni=0;
 
         for(ArrayList<Vuelo> aVuelos : vuelos.values()){
             for(Vuelo v:aVuelos){
-                System.out.println(v.getFechaVuelo()+"-"+v.getAvion().getId()+"-"+v.getOrigen()+"-"+v.getDestino()+"-"+v.getCliente().getNombre()+"-"+v.getCostoVuelo());
+                System.out.println(v.getFechaVuelo()+"-"+v.getIdAvion()+"-"+v.getOrigen()+"-"+v.getDestino()+"-"+v.getCliente().getNombre()+"-"+v.getCostoVuelo());
             }
         }
-
-
 
         try {
             String[] parametros= new String[6];
@@ -163,7 +170,7 @@ public abstract class Empresa {
                 double kmsRecorrido = calcularDistancia(origen,destino);
                 double costoVuelo = calculaCostoVuelo(kmsRecorrido,avionOk.getCostoKm(),cantPasajeros,tipoAvion);
 
-                Vuelo v = new Vuelo(dateVuelo,avionOk,origen,destino,cli,cantPasajeros,costoVuelo,kmsRecorrido);
+                Vuelo v = new Vuelo(dateVuelo,avionOk.getId(),origen,destino,cli,cantPasajeros,costoVuelo,kmsRecorrido);
                 ArrayList<Vuelo> arrVuelos=new ArrayList<Vuelo>();
                 if(vuelos.containsKey(dateVuelo)) {
                     arrVuelos = vuelos.get(dateVuelo);
@@ -171,7 +178,7 @@ public abstract class Empresa {
                 arrVuelos.add(v);
                 vuelos.put(dateVuelo,arrVuelos);
 
-                System.out.println(v.getFechaVuelo()+"-"+v.getAvion().getId()+"-"+v.getOrigen()+"-"+v.getDestino()+"-"+v.getCliente().getNombre()+"-"+v.getCostoVuelo());
+                System.out.println(v.getFechaVuelo()+"-"+v.getIdAvion()+"-"+v.getOrigen()+"-"+v.getDestino()+"-"+v.getCliente().getNombre()+"-"+v.getCostoVuelo());
                 guardarVuelosToJson();
             }
         }catch (IOException | ParseException e) {
@@ -179,51 +186,89 @@ public abstract class Empresa {
         }
     }
 
-    public static Avion consultaAvionDisponible(TipoAvion tipoAvion, Date fechaVuelo, int cantPasajeros){
+    public Avion consultaAvionDisponible(TipoAvion tipoAvion, Date fechaVuelo, int cantPasajeros){
 
-        switch (tipoAvion){
-            case GOLD ->{
-                for (Gold gold : avionesGold){
-                    if (gold.getCapacidad() >= cantPasajeros){
-                        boolean todoOk=consultaVueloDisponible(gold.getId(),fechaVuelo);
-                        if(todoOk==true){
-                            return gold;
+            switch (tipoAvion){
+                case GOLD ->{
+                    for (Gold gold : avionesGold){
+                        if (gold.getCapacidad() >= cantPasajeros){
+                            boolean todoOk=consultaVueloDisponible(gold.getId(),fechaVuelo);
+                            if(todoOk==true){
+                                return gold;
+                            }
                         }
                     }
+                    break;
                 }
-                break;
-            }
-            case SILVER -> {
-                for (Silver silver : avionesSilver){
-                    if (silver.getCapacidad() >= cantPasajeros){
-                        boolean todoOk=consultaVueloDisponible(silver.getId(),fechaVuelo);
-                        if(todoOk==true){
-                            return silver;
+                case SILVER -> {
+                    for (Silver silver : avionesSilver){
+                        if (silver.getCapacidad() >= cantPasajeros){
+                            boolean todoOk=consultaVueloDisponible(silver.getId(),fechaVuelo);
+                            if(todoOk==true){
+                                return silver;
+                            }
                         }
                     }
+                    break;
                 }
-                break;
-            }
 
-            case BRONZE -> {
-                for (Bronze bronze : avionesBronze){
-                    if (bronze.getCapacidad() >= cantPasajeros){
-                        boolean todoOk=consultaVueloDisponible(bronze.getId(),fechaVuelo);
-                        if(todoOk==true){
-                            return bronze;
+                case BRONZE -> {
+                    for (Bronze bronze : avionesBronze){
+                        if (bronze.getCapacidad() >= cantPasajeros){
+                            boolean todoOk=consultaVueloDisponible(bronze.getId(),fechaVuelo);
+                            if(todoOk==true){
+                                return bronze;
+                            }
                         }
                     }
+                    break;
                 }
-                break;
             }
-        }
         return null;
     }
 
-    public static boolean consultaVueloDisponible(int idAvion ,Date fechaVuelo){
+    public Avion validarDatosVuelo(String[] parametros) throws IOException, ParseException {
+        /// Verificar que el dni exista en clientes
+        Cliente cliente = Empresa.buscarCliente(Integer.parseInt(parametros[0]));
+        Avion avionOk=null;
+
+        if (cliente == null) {
+            System.out.println("ERROR: Cliente no encontrado :(\n");
+        } else {
+            System.out.println("Hola, " + cliente.getNombre());
+            /// Verificar que para esa fecha hay aviones de ese tipo disponibles
+
+
+
+            /// Verificar que el origen y el destino no sea el mismo
+            if (parametros[2].equals(parametros[3])) {
+                System.out.println("Me estas cargando " + cliente.getNombre() + "? Para que vas a pagar un vuelo para subir y bajar? Tanta plata tenes?");
+            }
+
+            /// Verificar que para esa fecha hay aviones de ese tipo disponibles
+            ///Casteos necesarios para consultaAvionDisponible
+
+            TipoAvion tipoAvion = TipoAvion.valueOf(parametros[5]);
+            SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
+            Date fecha = sdfg.parse(parametros[1]);
+            int cantPax = Integer.parseInt(parametros[4]);
+
+            avionOk = consultaAvionDisponible(tipoAvion, fecha, cantPax);
+            if (avionOk == null) {
+                System.out.println("No hay aviones disponibles\n");
+            } else {
+                System.out.println("Te hemos asignado el avion nº: " + avionOk.getId() + "\n");
+            }
+        }
+        return avionOk;
+    }
+
+
+    public boolean consultaVueloDisponible(int idAvion ,Date fechaVuelo){
         if(vuelos.containsKey(fechaVuelo)){
             for(Vuelo vuelo: vuelos.get(fechaVuelo)){
-                if(vuelo.getAvion().getId()==idAvion){
+
+                if(vuelo.getIdAvion() == idAvion){
                     return false;
                 }
             }
@@ -232,7 +277,10 @@ public abstract class Empresa {
     }
 
     public static void guardarVuelosToJson(){
+
         ObjectMapper mapperVuelos = new ObjectMapper();
+        SimpleDateFormat sdfg = new SimpleDateFormat("dd/MM/yyyy");
+        mapperVuelos.setDateFormat(sdfg);
         try {
             mapperVuelos.writeValue(fileVuelos,vuelos);
         } catch (IOException e) {
