@@ -61,6 +61,8 @@ public class Cliente {
             edad = Menu.checkInt(Menu.scanner.nextLine());
             if (edad == -1){
                 System.out.println("Ingrese la edad en números.");
+            }else {
+                this.setEdad(edad);
             }
         }while (edad == -1);
     }
@@ -69,5 +71,23 @@ public class Cliente {
     public String toString(){
         return "CLIENTE [ Nombre: " + nombre + " " + apellido +
                 " -dni: " + dni + " -Edad: " + edad + "]";
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o == this) return true;
+        if (!(o instanceof Cliente)) return false;
+        Cliente cl = (Cliente) o;
+        return cl.getDni() == dni && cl.getNombre().equals(nombre) && cl.getApellido().equals(apellido) && cl.getEdad() == edad;
+    }
+
+    @Override
+    public int hashCode(){
+        int result = nombre.hashCode();
+        result = 31 * result + apellido.hashCode();
+        result = 31 * result + Integer.hashCode(dni);
+        result = 31 * result + Integer.hashCode(edad);
+
+        return result;
     }
 }

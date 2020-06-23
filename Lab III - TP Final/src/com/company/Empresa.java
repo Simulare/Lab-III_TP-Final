@@ -124,9 +124,65 @@ public abstract class Empresa {
         }
     }
 
+    public void listarClientesMejorAvion(){
+        int contGold ;
+        int contSilver;
+        int contBronze;
+        for (Cliente cliente : clientes){
+            contBronze = 0;
+            contGold = 0;
+            contSilver = 0;
+            for (Map.Entry<Date, ArrayList<Vuelo>> entry : vuelos.entrySet()){
+                ArrayList<Vuelo> lista = entry.getValue();
+                for (Vuelo vuelo : lista){
+                    if (cliente.equals(vuelo.getCliente())){
+                        Avion avion = buscarAvion(vuelo.getIdAvion());
+                        switch (avion.getTipoAvion()){
+                            case GOLD ->{
+                                contGold++;
+                                break;
+                            }
+                            case SILVER->{
+                                contSilver++;
+                                break;
+                            }
+                            case BRONZE->{
+                                contBronze++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (contGold > 0){
+                System.out.println(cliente.toString() + " Mejor categoría de avión: GOLD.");
+            }else if (contSilver > 0){
+                System.out.println(cliente.toString() + " Mejor categoría de avión: SILVER.");
+            }else if (contBronze > 0){
+                System.out.println(cliente.toString() + " Mejor categoría de avión: BRONZE.");
+            }
+        }
+    }
+
+    public void listarClientesGastos (){
+        double gastoTotal;
+        for (Cliente cliente : clientes){
+            gastoTotal = 0;
+            for (Map.Entry<Date, ArrayList<Vuelo>> entry : vuelos.entrySet()){
+                ArrayList<Vuelo> lista = entry.getValue();
+                for (Vuelo vuelo : lista){
+                    if (cliente.equals(vuelo.getCliente())){
+                        gastoTotal += vuelo.getCostoVuelo();
+                    }
+                }
+            }
+            System.out.println(cliente.toString() + " Gastos totales: $" + gastoTotal);
+        }
+    }
+
     public void listarVuelos(){
         for (Map.Entry<Date, ArrayList<Vuelo>> entry : vuelos.entrySet()){
-            System.out.println("Vuelos del " + entry.getKey());
+            System.out.println(" ---- Vuelos del " + entry.getKey() + " ----\n");
             for (Vuelo vuelo : entry.getValue()){
                 System.out.println(vuelo.toString());
             }
@@ -137,12 +193,6 @@ public abstract class Empresa {
 
         Date fecha = null;
         int dni=0;
-
-        for(ArrayList<Vuelo> aVuelos : vuelos.values()){
-            for(Vuelo v:aVuelos){
-                System.out.println(v.getFechaVuelo()+"-"+v.getIdAvion()+"-"+v.getOrigen()+"-"+v.getDestino()+"-"+v.getCliente().getNombre()+"-"+v.getCostoVuelo());
-            }
-        }
 
         try {
             String[] parametros= new String[6];
@@ -178,7 +228,7 @@ public abstract class Empresa {
                 arrVuelos.add(v);
                 vuelos.put(dateVuelo,arrVuelos);
 
-                System.out.println(v.getFechaVuelo()+"-"+v.getIdAvion()+"-"+v.getOrigen()+"-"+v.getDestino()+"-"+v.getCliente().getNombre()+"-"+v.getCostoVuelo());
+                System.out.println(v.toString());
                 guardarVuelosToJson();
             }
         }catch (IOException | ParseException e) {
@@ -234,6 +284,7 @@ public abstract class Empresa {
 
         if (cliente == null) {
             System.out.println("ERROR: Cliente no encontrado :(\n");
+
         } else {
             System.out.println("Hola, " + cliente.getNombre());
             /// Verificar que para esa fecha hay aviones de ese tipo disponibles
@@ -242,7 +293,7 @@ public abstract class Empresa {
 
             /// Verificar que el origen y el destino no sea el mismo
             if (parametros[2].equals(parametros[3])) {
-                System.out.println("Me estas cargando " + cliente.getNombre() + "? Para que vas a pagar un vuelo para subir y bajar? Tanta plata tenes?");
+                System.out.println( cliente.getNombre() + " " + cliente.getApellido() + " no se puede contrar un vuelo que tenga mismo origen y destino.");
             }
 
             /// Verificar que para esa fecha hay aviones de ese tipo disponibles

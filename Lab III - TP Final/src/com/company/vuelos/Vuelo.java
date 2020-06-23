@@ -1,18 +1,12 @@
 package com.company.vuelos;
 
 import com.company.Cliente;
-import com.company.Empresa;
-import com.company.aviones.Avion;
 import com.company.aviones.TipoAvion;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 
 public class Vuelo {
@@ -44,6 +38,7 @@ public class Vuelo {
 
         System.out.print("DNI: ");
         String strDni = brTeclado.readLine();
+
         int rest = 0;
         do {
 
@@ -59,7 +54,7 @@ public class Vuelo {
                 java.util.Date Fecha = new Date();
 
                 if (fecha.compareTo(Fecha) < 0) {
-                    System.out.println("Fecha menor q la actual, kapo no seas boludo y compra algo para el futuro");
+                    System.out.println("ERROR. Fecha menor que la actual.");
                 } else {
                     rest = 1;
                 }
@@ -124,10 +119,10 @@ public class Vuelo {
     public static double calculaCostoVuelo(double cantKms,double costoKms, int cantPasajeros,TipoAvion tipoAvion){
         int tarifa;
         double costoTotal;
-        if (tipoAvion.name().equals(TipoAvion.BRONZE)){
+        if (tipoAvion.name().equals(TipoAvion.BRONZE.toString())){
             tarifa=3000;
         }else{
-            if (tipoAvion.name().equals(TipoAvion.SILVER)){
+            if (tipoAvion.name().equals(TipoAvion.SILVER.toString())){
                 tarifa=4000;
             }else{
                 tarifa=6000;

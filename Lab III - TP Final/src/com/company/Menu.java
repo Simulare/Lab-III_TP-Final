@@ -1,20 +1,15 @@
 package com.company;
 
 import com.company.aviones.*;
-import com.company.vuelos.Ciudad;
 import com.company.vuelos.Vuelo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-//import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
-//import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.*;
 
 public class Menu extends Empresa{
@@ -75,7 +70,10 @@ public class Menu extends Empresa{
             System.out.println("0. Salir del sistema.\n" +
                     "1. Comprar vuelos.\n" +
                     "2. Menu de listados.\n" +
-                    "3. Administrar aviones.\n\n" +
+                    "3. Administrar aviones.\n" +
+                    "4. Registrar cliente.\n" +
+                    "5. Eliminar cliente.\n" +
+                    "6. Cancelar vuelo.\n\n" +
                     "Elija una opción: ");
 
             respuesta = checkInt(scanner.nextLine());
@@ -83,18 +81,6 @@ public class Menu extends Empresa{
                 case 0:
                     break;
                 case 1:
-                    /*
-                    int dni = menuIdentificarCliente();
-                    if (dni != -1){
-
-                        Cliente clienteActual = buscarCliente(dni);
-                        if (clienteActual == null){
-                            clienteActual = registrarCliente(dni);
-                        }
-                        // Funciones para comprar los vuelos
-
-                    }
-                     */
                     comprarVuelo();
                     break;
                 case 2:
@@ -103,6 +89,44 @@ public class Menu extends Empresa{
                 case 3:
                     menuAdministarAviones();
                     break;
+                case 4:
+                    registrarCliente();
+                    break;
+                case 5:
+                    System.out.println(" -------------------------------------------------------");
+                    System.out.println("Ingrese el DNI del cliente a eliminar:");
+                    int dni = checkInt(scanner.nextLine());
+                    if (dni != -1){
+                        Cliente cliente = buscarCliente(dni);
+                        if (cliente == null){
+
+                            System.out.println("ERROR. No hay un cliente con el DNI ingresado.");
+                        }else{
+
+                            System.out.println("Confirma que quiere eliminar el cliente " +cliente.getNombre() + " " + cliente.getApellido() + "?"
+                                    + " Presione 's' para confirmar.");
+                            String entrada = scanner.nextLine();
+                            if (entrada.equalsIgnoreCase("s")){
+                                eliminarCliente(cliente);
+                                listClientesToJSONFile();
+                                System.out.println("Cliente eliminado correctamente.");
+                            }else {
+                                System.out.println("El cliente no se ha eliminado.");
+                            }
+                        }
+                    }else {
+                        System.out.println("ERROR. El DNI ingresado no es válido.");
+                    }
+                    System.out.println("\n... Presione ENTER para continuar ...");
+                    pausarConsola();
+                    scanner.nextLine();
+                    break;
+
+                case 6:
+
+                    //Cancelar vuelo
+                    break;
+
                 default:
                     System.out.println("Opción inválida.");
                     break;
@@ -110,34 +134,6 @@ public class Menu extends Empresa{
 
         }while (respuesta != 0);
 
-    }
-
-    public int menuIdentificarCliente(){
-        int respuesta = 0;
-        int dni;
-
-            do {
-                System.out.println(" -------------------------------------------------------");
-                System.out.println("         <<<<< IDENTIFICACIÓN DEL USUARIO >>>>>");
-                System.out.println(" -------------------------------------------------------\n");
-                System.out.println("Ingrese el DNI del cliente:");
-                dni = checkInt(scanner.nextLine());
-                if (dni == -1){
-                    System.out.println("              +++ DNI no válido +++");
-                }
-            } while (dni == -1);
-            System.out.println(" -------------------------------------------------------");
-            System.out.println("         <<<<< IDENTIFICACIÓN DEL USUARIO >>>>>");
-            System.out.println(" -------------------------------------------------------\n");
-            System.out.println("Confirma que se ha ingresado correctamente el DNI Nº " + dni + "? (Presione '1' para confirmar, o cualquier tecla para volver):");;
-            respuesta = checkInt(scanner.nextLine());
-
-            if (respuesta != 1){
-                System.out.println("No confirmó el DNI. Volverá al menú principal.");
-                dni = -1;
-            }
-
-        return dni;
     }
 
 
@@ -157,6 +153,9 @@ public class Menu extends Empresa{
                 case 0:
                     break;
                 case 1:
+                    System.out.println(" -------------------------------------------------------");
+                    System.out.println("             <<<<< LISTADO DE VUELOS >>>>>");
+                    System.out.println(" -------------------------------------------------------\n");
                     listarVuelos();
                     System.out.println("\n... Presione ENTER para continuar ...");
                     pausarConsola();
@@ -205,9 +204,7 @@ public class Menu extends Empresa{
                     System.out.println(" -------------------------------------------------------");
                     System.out.println("  <<<<< CLIENTES Y SU MEJOR CATEGORIA DE AVIÓN >>>>>");
                     System.out.println(" -------------------------------------------------------\n");
-
-                    ///Listado de mejor categoría
-
+                    listarClientesMejorAvion();
                     System.out.println("\n... Presione ENTER para continuar ...");
                     pausarConsola();
                     scanner.nextLine();
@@ -217,9 +214,7 @@ public class Menu extends Empresa{
                     System.out.println(" -------------------------------------------------------");
                     System.out.println("         <<<<< CLIENTES Y SU GASTO TOTAL >>>>>");
                     System.out.println(" -------------------------------------------------------\n");
-
-                    ///Listado de GASTO TOTAL
-
+                    listarClientesGastos();
                     System.out.println("\n... Presione ENTER para continuar ...");
                     pausarConsola();
                     scanner.nextLine();
@@ -232,17 +227,31 @@ public class Menu extends Empresa{
         }while (respuesta != 0);
     }
 
-    public Cliente registrarCliente(int dni){
+    public void registrarCliente(){
 
         System.out.println(" -------------------------------------------------------");
         System.out.println("            <<<<< REGISTRAR CLIENTE >>>>>");
         System.out.println(" -------------------------------------------------------\n");
-        System.out.println("Su DNI " + dni + " no está registrado. Para registrar complete sus datos:\n");
-        Cliente nuevoCliente = new Cliente();
-        agregarCliente(nuevoCliente);
-        clientes.add(nuevoCliente);
-        System.out.println("            +++ Registrado con éxito! +++");
-        return nuevoCliente;
+        System.out.println("Ingrese el DNI del cliente:");
+        int dni = checkInt(scanner.nextLine());
+        if (dni != -1){
+            Cliente cliente = buscarCliente(dni);
+            if (cliente != null){
+                System.out.println("Ya existe un cliente registrado con el DNI ingresado. Volverá al menú principal.");
+                System.out.println("\n... Presione ENTER para continuar ...");
+                pausarConsola();
+                scanner.nextLine();
+            }else{
+                cliente = new Cliente();
+                cliente.crearNuevo(dni);
+                agregarCliente(cliente);
+                listClientesToJSONFile();
+                System.out.println("            +++ Registrado con éxito! +++");
+                System.out.println("\n... Presione ENTER para continuar ...");
+                pausarConsola();
+                scanner.nextLine();
+            }
+        }
     }
 
     public void menuAdministarAviones(){
@@ -430,26 +439,27 @@ public class Menu extends Empresa{
                     poseewifi = true;
                 }
                 Gold gold = new Gold(id, ltsCombustible, costoKm, capacidad, maxVelocidad, propulsion, poseewifi, tipoAvion);
-                avionesGold.add(gold);
+                agregarAvion(gold);
                 break;
             case 2:
                 tipoAvion = TipoAvion.SILVER;
                 Silver silver = new Silver(id, ltsCombustible, costoKm, capacidad, maxVelocidad, propulsion, tipoAvion);
-                avionesSilver.add(silver);
+                agregarAvion(silver);
                 break;
             case 3:
                 tipoAvion = TipoAvion.BRONZE;
                 Bronze bronze = new Bronze(id, ltsCombustible, costoKm, capacidad, maxVelocidad, propulsion, tipoAvion);
-                avionesBronze.add(bronze);
+                agregarAvion(bronze);
                 break;
             default:
                 break;
         }
-        if (flag == false){
+        if (!flag){
 
             System.out.println( "Error en los datos cargados, no son válidos. No se guardó el avión.");;
         }else{
             System.out.println("           +++ Avión guardado con éxito! +++");
+            listAvionesToJSONFile();
         }
         System.out.println("\n... Presione ENTER para continuar ...");
         pausarConsola();

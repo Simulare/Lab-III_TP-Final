@@ -8,4 +8,9 @@
   "apellido" : "Perez",
   "dni" : 44555222,
   "edad" : 31
+}, {
+  "nombre" : "Lucia",
+  "apellido" : "Rodriguez",
+  "dni" : 11222333,
+  "edad" : 22
 } ]
