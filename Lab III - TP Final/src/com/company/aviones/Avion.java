@@ -1,5 +1,19 @@
 package com.company.aviones;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Gold.class, name = "Gold"),
+        @JsonSubTypes.Type(value = Silver.class, name = "Silver"),
+        @JsonSubTypes.Type(value = Bronze.class, name = "Bronze"),
+})
+
 public abstract class Avion {
     protected int id;
     protected double ltsComustible;

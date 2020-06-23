@@ -23,6 +23,8 @@ public class Vuelo {
     private double costoVuelo;
     private double kmsRecorrido;
 
+    public Vuelo(){}
+
     public Vuelo(Date fechaVuelo, Avion avion, Ciudad origen, Ciudad destino, Cliente cliente, int cantPasajeros, double costoVuelo, double kmsRecorrido) {
         this.fechaVuelo = fechaVuelo;
         this.avion = avion;
