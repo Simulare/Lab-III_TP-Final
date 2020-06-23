@@ -95,6 +95,7 @@ public class Menu extends Empresa{
 
                     }
                      */
+                    Cancelacion();
                     comprarVuelo();
                     break;
                 case 2:
